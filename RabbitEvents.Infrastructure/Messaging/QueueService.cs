@@ -64,7 +64,7 @@ public sealed class QueueService : IQueueService, IDisposable
 
         props.DeliveryMode = 1; //non-persistent
 
-        _channel.BasicPublish(message.Exchange.Name, message.Queue.RoutingKey, props, messageBodyBytes);
+        _channel.BasicPublish(message.Exchange.Name, message.RoutingKey, props, messageBodyBytes);
     }
 
     public void Dispose()
