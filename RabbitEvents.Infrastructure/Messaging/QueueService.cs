@@ -1,4 +1,5 @@
-﻿using RabbitEvents.Shared.Models.Messaging;
+﻿using Microsoft.Extensions.Configuration;
+using RabbitEvents.Shared.Models.Messaging;
 using RabbitMQ.Client;
 using System.Text;
 
@@ -9,9 +10,11 @@ public sealed class QueueService : IQueueService, IDisposable
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    public QueueService()
+    private const int NON_PERSISTENT_DELIVERYMODE = 1;
+
+    public QueueService(IConfiguration config)
     {
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = config.GetConnectionString("RabbitMq")! };
 
         _connection = factory.CreateConnection();
 
@@ -62,7 +65,7 @@ public sealed class QueueService : IQueueService, IDisposable
 
         IBasicProperties props = _channel.CreateBasicProperties();
 
-        props.DeliveryMode = 1; //non-persistent
+        props.DeliveryMode = NON_PERSISTENT_DELIVERYMODE;
 
         _channel.BasicPublish(message.Exchange.Name, message.RoutingKey, props, messageBodyBytes);
     }

@@ -25,7 +25,7 @@ public class AutorController : ApiBaseController
 
     [HttpPut("{id}")]
     [TypeFilter(typeof(ValidatorFilter<AtualizarAutorInput, AtualizarAutorValidator>))]
-    public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromBody] AtualizarAutorInput atualizarAutorInput)
+    public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromForm] AtualizarAutorInput atualizarAutorInput)
     {
         var response = await _autorService.AtualizarAsync(atualizarAutorInput);
 

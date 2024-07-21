@@ -42,13 +42,13 @@ public sealed class AutorService(
         if (autor is null)
             return response.NotFoundResponse();
 
-        var fileExtension = atualizarInput.Imagem?.GetFileExtension();
+        autor.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia, atualizarInput.Imagem?.GetFileExtension());
 
-        autor.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia, fileExtension);
-
-        await AutorRedisRepository.AtualizarAsync(autor);
+        await AutorRedisRepository.AtualizarAsync(autor, atualizarInput.Imagem?.GetByteArray());
 
         var autorResponse = AutorMap.ToAutorResponse(autor);
+
+        Logger.LogInformation("Autor atualizado com sucesso");
 
         return response.OkResponse(autorResponse);
     }

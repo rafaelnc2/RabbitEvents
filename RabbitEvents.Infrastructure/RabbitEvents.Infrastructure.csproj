@@ -20,8 +20,4 @@
     <ProjectReference Include="..\RabbitEvents.Domain\RabbitEvents.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EventBus\" />
-  </ItemGroup>
-
 </Project>

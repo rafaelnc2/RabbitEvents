@@ -27,13 +27,7 @@ public class AutorRedisRepository
 
         taskList.Add(_autorCollection.InsertAsync(autor));
 
-        if (imageInBytes is not null)
-        {
-            var setImageToCacheTask = _cacheService.SetValueAsync($"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autor.Id}", imageInBytes, CacheKeysConstants.DEFAULT_EXPIRES);
-
-            if (setImageToCacheTask is not null)
-                taskList.Add(setImageToCacheTask);
-        }
+        taskList.Add(SetImageToCacheTask(autor.Id, imageInBytes));
 
         await Task.WhenAll(taskList);
 
@@ -47,9 +41,31 @@ public class AutorRedisRepository
         return autor;
     }
 
+    public async Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes)
+    {
+        var taskList = new List<Task>();
+
+        taskList.Add(_autorCollection.UpdateAsync(autor));
+
+        taskList.Add(SetImageToCacheTask(autor.Id, imageInBytes));
+
+        await Task.WhenAll(taskList);
+
+        return autor;
+    }
+
     public async Task<Autor?> ObterPorIdAsync(string autorId) =>
         await _autorCollection.FindByIdAsync(autorId);
 
     public async Task<IEnumerable<Autor>> ObterTodosAsync() =>
         await _autorCollection.ToListAsync();
+
+
+    private Task SetImageToCacheTask(Guid autorId, byte[]? imageInBytes)
+    {
+        if (imageInBytes is null)
+            return Task.CompletedTask;
+
+        return _cacheService.SetValueAsync($"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}", imageInBytes, CacheKeysConstants.DEFAULT_EXPIRES) ?? Task.CompletedTask;
+    }
 }

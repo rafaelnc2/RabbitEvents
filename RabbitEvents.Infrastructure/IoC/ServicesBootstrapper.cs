@@ -10,6 +10,7 @@ internal class ServicesBootstrapper
     public void ServicesRegister(IServiceCollection services)
     {
         services.AddSingleton<IQueueService, QueueService>();
+
         services.AddScoped<IAutorDomainService, AutorService>();
     }
 }

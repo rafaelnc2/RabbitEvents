@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitEvents.Application.Events.Handlers.Autor;
 
 namespace RabbitEvents.Infrastructure.IoC;
@@ -11,6 +10,7 @@ internal class MassTransitBoostrapper
         services.AddMassTransit(x =>
         {
             x.AddConsumer<AutorCriadoEventHandler>();
+            x.AddConsumer<AutorAtualizadoEventHandler>();
 
             x.UsingInMemory((context, cfg) =>
             {

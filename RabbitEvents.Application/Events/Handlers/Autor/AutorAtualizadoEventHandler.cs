@@ -3,22 +3,23 @@ using RabbitEvents.Shared.Models.Messaging;
 
 namespace RabbitEvents.Application.Events.Handlers.Autor;
 
-public sealed class AutorCriadoEventHandler(
+public sealed class AutorAtualizadoEventHandler(
     ILogger<AutorCriadoEventHandler> Logger,
     ICacheService CacheService,
     IQueueService QueueService
-) : IConsumer<AutorCriadoEvent>
+) : IConsumer<AutorAtualizadoEvent>
 {
-    public async Task Consume(ConsumeContext<AutorCriadoEvent> context)
+    public async Task Consume(ConsumeContext<AutorAtualizadoEvent> context)
     {
-        Logger.LogInformation("Criado Event handler AutorCriado");
+        Logger.LogInformation("Criado Event handler AutorAtualizado");
 
         var autorId = context.Message.Id;
+        var imageName = context.Message.ImageName;
 
         QueueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.AUTOR_QUEUE,
             Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-            RoutingKey: "autor.add_update",
+            RoutingKey: "autor.no_images",
             MessageBody: autorId.ToString()
         ));
 
@@ -26,7 +27,7 @@ public sealed class AutorCriadoEventHandler(
 
         var keyExists = await CacheService.KeyExistsAsync(messageBody);
 
-        if (keyExists)
+        if (keyExists is true && string.IsNullOrEmpty(imageName) is false)
         {
             QueueService.SendMessage(new QueueMessage(
                 Queue: QueueDefinitions.AUTOR_IMAGE_QUEUE,

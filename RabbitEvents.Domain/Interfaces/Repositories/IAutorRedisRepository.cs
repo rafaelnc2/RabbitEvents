@@ -8,6 +8,8 @@ public interface IAutorRedisRepository
 
     Task<Autor> AtualizarAsync(Autor autor);
 
+    Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes);
+
     Task<Autor?> ObterPorIdAsync(string autorId);
 
     Task<IEnumerable<Autor>> ObterTodosAsync();

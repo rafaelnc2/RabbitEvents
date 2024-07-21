@@ -10,7 +10,7 @@ public static class AutorMap
             autor.Nome,
             autor.Sobre,
             autor.Biografia,
-            autor.Imagem,
+            string.IsNullOrWhiteSpace(autor.Imagem) ? "default.jpeg" : autor.Imagem,
             autor.DataCriacao,
             autor.DataAtualizacao
         );
@@ -21,7 +21,7 @@ public static class AutorMap
             autor.Nome,
             autor.Sobre,
             autor.Biografia,
-            autor.Imagem,
+            string.IsNullOrWhiteSpace(autor.Imagem) ? "default.jpeg" : autor.Imagem,
             autor.DataCriacao
         );
 }

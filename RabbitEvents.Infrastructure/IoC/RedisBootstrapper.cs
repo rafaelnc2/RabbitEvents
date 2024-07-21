@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RabbitEvents.Application.Interfaces;
 using RabbitEvents.Infrastructure.Persistence.Redis.Caching;
-using StackExchange.Redis;
 
 namespace RabbitEvents.Infrastructure.IoC;
 
