@@ -15,7 +15,7 @@ public class RabbitMQRegistrationService : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _queueService.CreateMessageChannel(QueueDefinitions.AUTOR_ADD_QUEUE, QueueDefinitions.AUTOR_EXCHANGE);
+        _queueService.CreateMessageChannel(QueueDefinitions.AUTOR_QUEUE, QueueDefinitions.AUTOR_EXCHANGE);
 
         _queueService.CreateMessageChannel(QueueDefinitions.AUTOR_IMAGE_QUEUE, QueueDefinitions.AUTOR_EXCHANGE);
 

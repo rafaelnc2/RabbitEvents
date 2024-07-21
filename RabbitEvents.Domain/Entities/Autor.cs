@@ -70,5 +70,7 @@ public sealed class Autor : Entity
         Imagem = imageName;
 
         DataAtualizacao = DateTime.Now;
+
+        Raise(new AutorAtualizadoEvent(Id, imageName));
     }
 }

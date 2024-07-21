@@ -11,15 +11,6 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
         _bus = bus;
     }
 
-    public async Task<Autor> AtualizarAsync(Autor autor)
-    {
-        await _autorRedisRepository.AtualizarAsync(autor);
-
-        await PublishEventsAsync(autor);
-
-        return autor;
-    }
-
     public async Task<Autor> CriarAsync(Autor autor)
     {
         await _autorRedisRepository.CriarAsync(autor);
@@ -37,6 +28,25 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
 
         return autor;
     }
+
+    public async Task<Autor> AtualizarAsync(Autor autor)
+    {
+        await _autorRedisRepository.AtualizarAsync(autor);
+
+        await PublishEventsAsync(autor);
+
+        return autor;
+    }
+
+    public async Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes)
+    {
+        await _autorRedisRepository.AtualizarAsync(autor, imageInBytes);
+
+        await PublishEventsAsync(autor);
+
+        return autor;
+    }
+
 
     public Task<Autor?> ObterPorIdAsync(string autorId) =>
         _autorRedisRepository.ObterPorIdAsync(autorId);

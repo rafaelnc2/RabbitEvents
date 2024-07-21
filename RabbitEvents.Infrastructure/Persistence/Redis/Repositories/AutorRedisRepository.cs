@@ -47,9 +47,31 @@ public class AutorRedisRepository
         return autor;
     }
 
+    public async Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes)
+    {
+        var taskList = new List<Task>();
+
+        taskList.Add(_autorCollection.UpdateAsync(autor));
+
+        taskList.Add(GetSaveImageTask(autor.Id, imageInBytes));
+
+        await Task.WhenAll(taskList);
+
+        return autor;
+    }
+
     public async Task<Autor?> ObterPorIdAsync(string autorId) =>
         await _autorCollection.FindByIdAsync(autorId);
 
     public async Task<IEnumerable<Autor>> ObterTodosAsync() =>
         await _autorCollection.ToListAsync();
+
+
+    private Task GetSaveImageTask(Guid autorId, byte[]? imageInBytes)
+    {
+        if (imageInBytes is null)
+            return Task.CompletedTask;
+
+        return _cacheService.SetValueAsync($"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}", imageInBytes, CacheKeysConstants.DEFAULT_EXPIRES);
+    }
 }

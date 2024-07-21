@@ -9,6 +9,8 @@ public sealed class QueueService : IQueueService, IDisposable
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
+    private const int NON_PERSISTENT_DELIVERYMODE = 1;
+
     public QueueService()
     {
         var factory = new ConnectionFactory() { HostName = "localhost" };
@@ -62,7 +64,7 @@ public sealed class QueueService : IQueueService, IDisposable
 
         IBasicProperties props = _channel.CreateBasicProperties();
 
-        props.DeliveryMode = 1; //non-persistent
+        props.DeliveryMode = NON_PERSISTENT_DELIVERYMODE;
 
         _channel.BasicPublish(message.Exchange.Name, message.RoutingKey, props, messageBodyBytes);
     }
