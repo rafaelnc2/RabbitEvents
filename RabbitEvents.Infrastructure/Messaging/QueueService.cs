@@ -1,4 +1,5 @@
-﻿using RabbitEvents.Shared.Models.Messaging;
+﻿using Microsoft.Extensions.Configuration;
+using RabbitEvents.Shared.Models.Messaging;
 using RabbitMQ.Client;
 using System.Text;
 
@@ -11,9 +12,9 @@ public sealed class QueueService : IQueueService, IDisposable
 
     private const int NON_PERSISTENT_DELIVERYMODE = 1;
 
-    public QueueService()
+    public QueueService(IConfiguration config)
     {
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = config.GetConnectionString("RabbitMq")! };
 
         _connection = factory.CreateConnection();
 
