@@ -66,6 +66,6 @@ public class AutorRedisRepository
         if (imageInBytes is null)
             return Task.CompletedTask;
 
-        return _cacheService.SetValueAsync($"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}", imageInBytes, CacheKeysConstants.DEFAULT_EXPIRES);
+        return _cacheService.SetValueAsync($"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}", imageInBytes, CacheKeysConstants.DEFAULT_EXPIRES)!;
     }
 }
