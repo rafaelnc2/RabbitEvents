@@ -19,7 +19,7 @@ public sealed class AutorAtualizadoEventHandler(
         QueueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.AUTOR_QUEUE,
             Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-            RoutingKey: "autor.update.route",
+            RoutingKey: "autor.no_images",
             MessageBody: autorId.ToString()
         ));
 
@@ -32,7 +32,7 @@ public sealed class AutorAtualizadoEventHandler(
             QueueService.SendMessage(new QueueMessage(
                 Queue: QueueDefinitions.AUTOR_IMAGE_QUEUE,
                 Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-                RoutingKey: "autor.image.route",
+                RoutingKey: "autor.images",
                 MessageBody: messageBody
             ));
         }
