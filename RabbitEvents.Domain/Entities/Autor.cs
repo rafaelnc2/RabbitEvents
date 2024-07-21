@@ -61,9 +61,9 @@ public sealed class Autor : Entity
 
     public void Update(string nome, string sobre, string biografia, string? extension)
     {
-        Nome = nome;
-        Sobre = sobre;
-        Biografia = biografia;
+        Nome = nome.Trim();
+        Sobre = sobre.Trim();
+        Biografia = biografia.Trim();
 
         var imageName = string.IsNullOrEmpty(extension) ? string.Empty : $"{Id}.{extension}";
 
