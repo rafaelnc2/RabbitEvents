@@ -18,6 +18,7 @@ public sealed class AutorCriadoEventHandler(
         QueueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.AUTOR_ADD_QUEUE,
             Exchange: QueueDefinitions.AUTOR_EXCHANGE,
+            RoutingKey: "autor.add.route",
             MessageBody: autorId.ToString()
         ));
 
@@ -30,6 +31,7 @@ public sealed class AutorCriadoEventHandler(
             QueueService.SendMessage(new QueueMessage(
                 Queue: QueueDefinitions.AUTOR_IMAGE_QUEUE,
                 Exchange: QueueDefinitions.AUTOR_EXCHANGE,
+                RoutingKey: "autor.image.route",
                 MessageBody: messageBody
             ));
         }
