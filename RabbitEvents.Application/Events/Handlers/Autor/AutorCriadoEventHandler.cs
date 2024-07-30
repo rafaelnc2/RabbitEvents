@@ -11,14 +11,14 @@ public sealed class AutorCriadoEventHandler(
 {
     public async Task Consume(ConsumeContext<AutorCriadoEvent> context)
     {
-        Logger.LogInformation("Criado Event handler AutorCriado");
+        Logger.LogInformation("Event handler AutorCriado");
 
         var autorId = context.Message.Id;
 
         QueueService.SendMessage(new QueueMessage(
-            Queue: QueueDefinitions.AUTOR_QUEUE,
-            Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-            RoutingKey: "autor.add_update",
+            Queue: QueueDefinitions.AUTHORS_QUEUE,
+            Exchange: null,
+            RoutingKey: "authors",
             MessageBody: autorId.ToString()
         ));
 
@@ -29,9 +29,9 @@ public sealed class AutorCriadoEventHandler(
         if (keyExists)
         {
             QueueService.SendMessage(new QueueMessage(
-                Queue: QueueDefinitions.AUTOR_IMAGE_QUEUE,
-                Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-                RoutingKey: "autor.images",
+                Queue: QueueDefinitions.IMAGES_QUEUE,
+                Exchange: null,
+                RoutingKey: "images",
                 MessageBody: messageBody
             ));
         }

@@ -17,9 +17,9 @@ public sealed class AutorAtualizadoEventHandler(
         var imageName = context.Message.ImageName;
 
         QueueService.SendMessage(new QueueMessage(
-            Queue: QueueDefinitions.AUTOR_QUEUE,
-            Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-            RoutingKey: "autor.no_images",
+            Queue: QueueDefinitions.AUTHORS_QUEUE,
+            Exchange: null,
+            RoutingKey: "authors",
             MessageBody: autorId.ToString()
         ));
 
@@ -30,9 +30,9 @@ public sealed class AutorAtualizadoEventHandler(
         if (keyExists is true && string.IsNullOrEmpty(imageName) is false)
         {
             QueueService.SendMessage(new QueueMessage(
-                Queue: QueueDefinitions.AUTOR_IMAGE_QUEUE,
-                Exchange: QueueDefinitions.AUTOR_EXCHANGE,
-                RoutingKey: "autor.images",
+                Queue: QueueDefinitions.IMAGES_QUEUE,
+                Exchange: null,
+                RoutingKey: "images",
                 MessageBody: messageBody
             ));
         }

@@ -40,7 +40,7 @@ public sealed class QueueService : IQueueService, IDisposable
                            exchange: exchange,
                            routingKey: routingKey);
 
-    public void CreateMessageChannel(Queue queue, Exchange exchange)
+    public void CreateTopic(Queue queue, Exchange exchange)
     {
         try
         {
@@ -57,9 +57,24 @@ public sealed class QueueService : IQueueService, IDisposable
         }
     }
 
+    public void CreateQueue(Queue queue)
+    {
+        try
+        {
+            QueueDeclare(queue.Name);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public void SendMessage(QueueMessage message)
     {
-        CreateMessageChannel(message.Queue, message.Exchange);
+        if (message.Exchange is not null)
+            CreateTopic(message.Queue, message.Exchange);
+        else
+            CreateQueue(message.Queue);
 
         var messageBodyBytes = Encoding.UTF8.GetBytes(message.MessageBody);
 
@@ -67,7 +82,7 @@ public sealed class QueueService : IQueueService, IDisposable
 
         props.DeliveryMode = NON_PERSISTENT_DELIVERYMODE;
 
-        _channel.BasicPublish(message.Exchange.Name, message.RoutingKey, props, messageBodyBytes);
+        _channel.BasicPublish(message.Exchange?.Name ?? "", message.RoutingKey, props, messageBodyBytes);
     }
 
     public void Dispose()
