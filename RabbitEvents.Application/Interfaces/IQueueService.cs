@@ -4,7 +4,9 @@ namespace RabbitEvents.Application.Interfaces;
 
 public interface IQueueService
 {
-    void CreateMessageChannel(Queue queue, Exchange exchange);
-    //void CreateMessageChannel(string queue, Exchange exchange, string routingKey);
+    void CreateTopic(Queue queue, Exchange exchange);
+
+    void CreateQueue(Queue queue);
+
     void SendMessage(QueueMessage message);
 }

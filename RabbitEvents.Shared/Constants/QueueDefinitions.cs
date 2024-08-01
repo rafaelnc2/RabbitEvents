@@ -4,9 +4,9 @@ namespace RabbitEvents.Shared.Constants;
 
 public static class QueueDefinitions
 {
-    public static Exchange AUTOR_EXCHANGE = new("autor_exchange", "topic");
+    public static Exchange AUTHORS_EXCHANGE = new("authors_exchange", "topic");
 
-    public static Queue AUTOR_QUEUE = new("autor_add_update", "autor.add_update");
+    public static Queue AUTHORS_QUEUE = new("authors", "authors");
 
-    public static Queue AUTOR_IMAGE_QUEUE = new("autor_image", "autor.images");
+    public static Queue IMAGES_QUEUE = new("images", "images");
 }
