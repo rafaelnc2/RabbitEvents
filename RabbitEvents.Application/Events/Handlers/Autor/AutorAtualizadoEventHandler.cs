@@ -30,9 +30,9 @@ public sealed class AutorAtualizadoEventHandler(
         if (keyExists is true && string.IsNullOrEmpty(imageName) is false)
         {
             QueueService.SendMessage(new QueueMessage(
-                Queue: QueueDefinitions.IMAGES_QUEUE,
-                Exchange: null,
-                RoutingKey: "images",
+                Queue: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE,
+                Exchange: QueueDefinitions.IMAGES_EXCHANGE,
+                RoutingKey: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE.RoutingKey,
                 MessageBody: messageBody
             ));
         }

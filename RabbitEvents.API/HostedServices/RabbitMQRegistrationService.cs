@@ -17,7 +17,9 @@ public class RabbitMQRegistrationService : BackgroundService
     {
         _queueService.CreateQueue(QueueDefinitions.AUTHORS_QUEUE);
 
-        _queueService.CreateQueue(QueueDefinitions.IMAGES_QUEUE);
+        _queueService.CreateTopic(QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE, QueueDefinitions.IMAGES_EXCHANGE);
+
+        _queueService.CreateTopic(QueueDefinitions.IMAGES_CREATE_QUEUE, QueueDefinitions.IMAGES_EXCHANGE);
 
         return Task.CompletedTask;
     }
