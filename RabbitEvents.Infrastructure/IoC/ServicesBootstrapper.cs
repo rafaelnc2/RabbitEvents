@@ -1,15 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using RabbitEvents.Application.Services;
-using RabbitEvents.Domain.Interfaces.DomainServices;
-using RabbitEvents.Infrastructure.Messaging;
-
-namespace RabbitEvents.Infrastructure.IoC;
+﻿namespace RabbitEvents.Infrastructure.IoC;
 
 internal class ServicesBootstrapper
 {
-    public void ServicesRegister(IServiceCollection services)
+    public void ServicesRegister(IServiceCollection services, IConfiguration config)
     {
         services.AddSingleton<IQueueService, QueueService>();
+
+        services.AddSingleton<IBlobService, BlobService>();
+        services.AddSingleton(_ => new BlobServiceClient(config.GetConnectionString("BlobStorage")));
 
         services.AddScoped<IAutorDomainService, AutorService>();
     }

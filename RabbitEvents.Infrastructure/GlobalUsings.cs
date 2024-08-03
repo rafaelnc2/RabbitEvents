@@ -1,9 +1,16 @@
-﻿global using MassTransit;
+﻿global using Azure.Storage.Blobs;
+global using MassTransit;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
 global using RabbitEvents.Application.Interfaces;
+global using RabbitEvents.Application.Services;
 global using RabbitEvents.Domain;
 global using RabbitEvents.Domain.Entities;
+global using RabbitEvents.Domain.Interfaces.DomainServices;
 global using RabbitEvents.Domain.Interfaces.Events;
 global using RabbitEvents.Domain.Interfaces.Repositories;
+global using RabbitEvents.Infrastructure.Messaging;
+global using RabbitEvents.Infrastructure.Storage;
 global using RabbitEvents.Shared.Constants;
 global using Redis.OM;
 global using Redis.OM.Searching;
