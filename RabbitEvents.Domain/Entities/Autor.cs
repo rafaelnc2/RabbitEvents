@@ -36,7 +36,7 @@ public sealed class Autor : Entity
     public List<Livro>? Livros { get; private set; }
 
 
-    public static Autor Create(string nome, string sobre, string biografia, string? extension = null)
+    public static Autor Create(string nome, string sobre, string biografia, string? contentType = null, string? extension = null)
     {
         var newId = Guid.NewGuid();
 
@@ -54,7 +54,7 @@ public sealed class Autor : Entity
             dataAtualizacao: null
         );
 
-        Raise(new AutorCriadoEvent(autor.Id));
+        Raise(new AutorCriadoEvent(autor.Id, extension, contentType));
 
         return autor;
     }

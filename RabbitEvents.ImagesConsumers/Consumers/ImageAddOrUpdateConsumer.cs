@@ -1,5 +1,7 @@
 ﻿using RabbitEvents.Application.Interfaces;
 using RabbitEvents.Shared.Constants;
+using RabbitEvents.Shared.Dtos;
+using System.Text.Json;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 
@@ -9,16 +11,21 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
     private readonly IQueueService _queueService;
     private readonly IServiceProvider _serviceProvider;
     private readonly ICacheService _cacheService;
+    private readonly IBlobService _blobService;
+
+    private const string BlobContainerName = "author-images";
 
     public ImageAddOrUpdateConsumer(ILogger<ImageAddOrUpdateConsumer> logger,
         IQueueService queueService,
         IServiceProvider serviceProvider,
-        ICacheService cacheService)
+        ICacheService cacheService,
+        IBlobService blobService)
     {
         _logger = logger;
         _queueService = queueService;
         _serviceProvider = serviceProvider;
         _cacheService = cacheService;
+        _blobService = blobService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -36,22 +43,36 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
     {
         _logger.LogInformation($"Processando a mensagem: {message}");
 
-        var autorImageString = await _cacheService.GetValueAsync(message);
+        var messageBody = JsonSerializer.Deserialize<ImageMessageBodyDto>(message);
 
-        if (string.IsNullOrWhiteSpace(autorImageString))
+        if (messageBody is null)
         {
-            _logger.LogWarning($"A imagem {message} não existe no cache");
+            _logger.LogError($"Problemas para deserializar a mensagem {message}");
             return;
         }
 
-        byte[] autorImageBytes = System.Text.Encoding.UTF8.GetBytes(autorImageString);
+        if (string.IsNullOrWhiteSpace(messageBody.ImageId) || string.IsNullOrWhiteSpace(messageBody.FileExtension) || string.IsNullOrWhiteSpace(messageBody.ContentType))
+        {
+            _logger.LogError($"Erro ao obter dados da imagem. Mensagem: {message}");
+            return;
+        }
 
-        Stream stream = new MemoryStream(autorImageBytes);
+        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{messageBody.ImageId}";
 
-        //var autorid = message.Split(AutorImagePrefixSeparator).LastOrDefault();
+        var cachedAutorImage = await _cacheService.GetBytesValueAsync(authorIdCacheKey);
 
-        //using var scope = _serviceProvider.CreateScope();
+        if (cachedAutorImage is null)
+        {
+            _logger.LogWarning($"A imagem {authorIdCacheKey} não existe no cache");
+            return;
+        }
 
-        //IAutorRedisRepository autorRedisRepository = scope.ServiceProvider.GetService<IAutorRedisRepository>()!;
+        string fileName = $"{messageBody.ImageId}.{messageBody.FileExtension}";
+
+        using Stream stream = new MemoryStream(cachedAutorImage);
+
+        var uploadedFile = await _blobService.UploadFileAsync(BlobContainerName, stream, fileName, messageBody.ContentType, CancellationToken.None);
+
+        await _cacheService.DeleteValueAsync(authorIdCacheKey);
     }
 }

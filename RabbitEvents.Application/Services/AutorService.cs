@@ -20,7 +20,7 @@ public sealed class AutorService(
 
         var response = new ApiResponse<CriarAutorResponse>();
 
-        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Imagem?.GetFileExtension());
+        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Imagem?.ContentType, criarInput.Imagem?.GetFileExtension());
 
         var result = await AutorRedisRepository.CriarAsync(autor, criarInput.Imagem?.GetByteArray());
 

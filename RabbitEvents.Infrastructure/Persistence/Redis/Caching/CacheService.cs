@@ -29,16 +29,23 @@ public sealed class CacheService : ICacheService
         return _database.StringSetAsync(key, value, expires);
     }
 
-    public async Task<string?> GetValueAsync(string key)
+    public async Task<string?> GetStringValueAsync(string key)
     {
         var cachedValue = await _database.StringGetAsync(key);
 
         return cachedValue.ToString();
     }
 
+    public async Task<byte[]?> GetBytesValueAsync(string key)
+    {
+        var cachedValue = await _database.StringGetAsync(key);
+
+        return cachedValue;
+    }
+
     public Task DeleteValueAsync(string key)
     {
-        throw new NotImplementedException();
+        return _database.StringGetDeleteAsync(key);
     }
 
     public Task<bool> KeyExistsAsync(string key) =>

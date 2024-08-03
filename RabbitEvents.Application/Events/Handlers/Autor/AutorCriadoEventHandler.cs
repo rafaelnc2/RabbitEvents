@@ -1,5 +1,7 @@
 ﻿using RabbitEvents.Domain.Events.AutorEvents;
+using RabbitEvents.Shared.Dtos;
 using RabbitEvents.Shared.Models.Messaging;
+using System.Text.Json;
 
 namespace RabbitEvents.Application.Events.Handlers.Autor;
 
@@ -22,17 +24,23 @@ public sealed class AutorCriadoEventHandler(
             MessageBody: autorId.ToString()
         ));
 
-        var messageBody = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}";
+        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}";
 
-        var keyExists = await CacheService.KeyExistsAsync(messageBody);
+        var keyExists = await CacheService.KeyExistsAsync(authorIdCacheKey);
 
         if (keyExists)
         {
+            var messageBody = new ImageMessageBodyDto(
+                ImageId: autorId.ToString(),
+                FileExtension: context.Message.FileExtension,
+                ContentType: context.Message.ContentType
+            );
+
             QueueService.SendMessage(new QueueMessage(
                 Queue: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE,
                 Exchange: QueueDefinitions.IMAGES_EXCHANGE,
                 RoutingKey: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE.RoutingKey,
-                MessageBody: messageBody
+                MessageBody: JsonSerializer.Serialize(messageBody)
             ));
 
             return;
@@ -42,7 +50,7 @@ public sealed class AutorCriadoEventHandler(
             Queue: QueueDefinitions.IMAGES_CREATE_QUEUE,
             Exchange: QueueDefinitions.IMAGES_EXCHANGE,
             RoutingKey: QueueDefinitions.IMAGES_CREATE_QUEUE.RoutingKey,
-            MessageBody: messageBody
+            MessageBody: authorIdCacheKey
         ));
     }
 }
