@@ -1,7 +1,4 @@
-﻿using RabbitEvents.Application.Interfaces;
-using StackExchange.Redis;
-
-namespace RabbitEvents.Infrastructure.Persistence.Redis.Caching;
+﻿namespace RabbitEvents.Infrastructure.Persistence.Redis.Caching;
 
 public sealed class CacheService : ICacheService
 {
@@ -32,9 +29,11 @@ public sealed class CacheService : ICacheService
         return _database.StringSetAsync(key, value, expires);
     }
 
-    public Task GetValueAsync(string key)
+    public async Task<string?> GetValueAsync(string key)
     {
-        throw new NotImplementedException();
+        var cachedValue = await _database.StringGetAsync(key);
+
+        return cachedValue.ToString();
     }
 
     public Task DeleteValueAsync(string key)

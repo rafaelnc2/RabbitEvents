@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitEvents.Tests", "Rabbi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitEvents.Shared", "RabbitEvents.Shared\RabbitEvents.Shared.csproj", "{87FED563-2E61-4A8F-8CB0-1F9DE3C21483}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QueueConsumers", "QueueConsumers", "{573C6FBB-A360-49AE-8BBA-1FA55F7889D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitEvents.ImagesConsumers", "RabbitEvents.ImagesConsumers\RabbitEvents.ImagesConsumers.csproj", "{A84750ED-93EA-497C-85A2-2475E860E91A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,9 +49,16 @@ Global
 		{87FED563-2E61-4A8F-8CB0-1F9DE3C21483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87FED563-2E61-4A8F-8CB0-1F9DE3C21483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87FED563-2E61-4A8F-8CB0-1F9DE3C21483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A84750ED-93EA-497C-85A2-2475E860E91A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A84750ED-93EA-497C-85A2-2475E860E91A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A84750ED-93EA-497C-85A2-2475E860E91A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A84750ED-93EA-497C-85A2-2475E860E91A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A84750ED-93EA-497C-85A2-2475E860E91A} = {573C6FBB-A360-49AE-8BBA-1FA55F7889D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B1433DD-995D-447B-9B00-507708BAEDB8}

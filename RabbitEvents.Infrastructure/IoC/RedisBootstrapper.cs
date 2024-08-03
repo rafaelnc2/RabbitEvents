@@ -12,6 +12,6 @@ public class RedisBootstrapper
 
         services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer.Connect(connectionString));
 
-        services.AddScoped<ICacheService, CacheService>();
+        services.AddSingleton<ICacheService, CacheService>();
     }
 }
