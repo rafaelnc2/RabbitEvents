@@ -21,7 +21,7 @@ public sealed class AutorComImagemCriadoEventHandler(
         if (keyExists)
         {
             var messageBody = new ImageMessageBodyDto(
-                ImageId: autorId.ToString(),
+                ImageId: authorIdCacheKey,
                 FileExtension: context.Message.FileExtension,
                 ContentType: context.Message.ContentType
             );
