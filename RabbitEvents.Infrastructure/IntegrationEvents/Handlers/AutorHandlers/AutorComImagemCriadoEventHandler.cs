@@ -12,9 +12,7 @@ public sealed class AutorComImagemCriadoEventHandler(
     {
         Logger.LogInformation("Event handler AutorComImagemCriadoEventHandler");
 
-        var autorId = context.Message.AutorId;
-
-        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}";
+        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{context.Message.AutorId}";
 
         var keyExists = await CacheService.KeyExistsAsync(authorIdCacheKey);
 
