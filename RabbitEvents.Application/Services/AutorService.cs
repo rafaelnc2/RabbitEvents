@@ -1,5 +1,4 @@
-﻿using RabbitEvents.Application.Extensions;
-using RabbitEvents.Application.Mappings;
+﻿using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
 using RabbitEvents.Shared.Inputs.Autor;
 using RabbitEvents.Shared.Responses.Autor;
 
@@ -7,22 +6,24 @@ namespace RabbitEvents.Application.Services;
 
 public sealed class AutorService(
     ILogger<AutorService> Logger,
-    IAutorRedisRepository AutorRedisRepository) : IAutorDomainService
+    IAutorRedisRepository AutorRedisRepository,
+    IBus Bus) : IAutorDomainService
 {
-    //https://www.youtube.com/watch?v=Ft4SJgQETAk&t=81s
-    // fazer upload de imagens blob storage local docker
-    //https://hub.docker.com/r/microsoft/azure-storage-azurite
-    //https://www.youtube.com/watch?v=Tt5zIKVMMbs = incluir cache para armazenar stream do arquivo
-
     public async Task<ApiResponse<CriarAutorResponse>> CriarAsync(CriarAutorInput criarInput)
     {
         Logger.LogInformation("Criando novo Autor");
 
         var response = new ApiResponse<CriarAutorResponse>();
 
-        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Imagem?.ContentType, criarInput.Imagem?.GetFileExtension());
+        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia);
 
         var result = await AutorRedisRepository.CriarAsync(autor, criarInput.Imagem?.GetByteArray());
+
+        if (criarInput.Imagem is not null)
+        {
+            var imageIntegrationEvent = new AutorComImagemCriadoEvent(autor.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
+            await Bus.Publish((object)imageIntegrationEvent);
+        }
 
         var autorResponse = AutorMap.ToCriarAutorResponse(result);
 

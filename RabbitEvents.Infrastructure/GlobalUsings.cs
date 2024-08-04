@@ -2,6 +2,7 @@
 global using MassTransit;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
 global using RabbitEvents.Application.Interfaces;
 global using RabbitEvents.Application.Services;
 global using RabbitEvents.Domain;
@@ -12,6 +13,9 @@ global using RabbitEvents.Domain.Interfaces.Repositories;
 global using RabbitEvents.Infrastructure.Messaging;
 global using RabbitEvents.Infrastructure.Storage;
 global using RabbitEvents.Shared.Constants;
+global using RabbitEvents.Shared.Dtos;
+global using RabbitEvents.Shared.Models.Messaging;
 global using Redis.OM;
 global using Redis.OM.Searching;
 global using StackExchange.Redis;
+global using System.Text.Json;

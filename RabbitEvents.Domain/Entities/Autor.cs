@@ -36,11 +36,9 @@ public sealed class Autor : Entity
     public List<Livro>? Livros { get; private set; }
 
 
-    public static Autor Create(string nome, string sobre, string biografia, string? contentType = null, string? extension = null)
+    public static Autor Create(string nome, string sobre, string biografia)
     {
         var newId = Guid.NewGuid();
-
-        var imageName = string.IsNullOrEmpty(extension) ? string.Empty : $"{newId}.{extension}";
 
         var autor = new Autor(
             id: newId,
@@ -48,13 +46,13 @@ public sealed class Autor : Entity
             nome: nome.Trim(),
             sobre: sobre.Trim(),
             biografia: biografia.Trim(),
-            imagem: imageName,
+            imagem: null,
 
             dataCriacao: DateTime.Now,
             dataAtualizacao: null
         );
 
-        Raise(new AutorCriadoEvent(autor.Id, extension, contentType));
+        Raise(new AutorCriadoEvent(autor.Id));
 
         return autor;
     }
