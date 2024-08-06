@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using RabbitEvents.Shared.Models.Messaging;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System.Text;
 
 namespace RabbitEvents.Infrastructure.Messaging;
@@ -84,6 +85,42 @@ public sealed class QueueService : IQueueService, IDisposable
 
         _channel.BasicPublish(message.Exchange?.Name ?? "", message.RoutingKey, props, messageBodyBytes);
     }
+
+
+    public async Task ConsumeQueue(string queueName, Func<string, ulong, Task> messageHandlerAsync, CancellationToken cancellationToken)
+    {
+        var consumer = new EventingBasicConsumer(_channel);
+
+        var message = string.Empty;
+
+        consumer.Received += async (model, ea) =>
+        {
+            var body = ea.Body.ToArray();
+            message = Encoding.UTF8.GetString(body);
+
+            try
+            {
+                await messageHandlerAsync(message, ea.DeliveryTag);
+
+                _channel.BasicAck(ea.DeliveryTag, false);
+            }
+            catch (Exception ex)
+            {
+                _channel.BasicNack(ea.DeliveryTag, false, true);
+            }
+        };
+
+        _channel.BasicConsume(queue: queueName,
+                              autoAck: false,
+                              consumer: consumer);
+
+        cancellationToken.Register(() =>
+        {
+            foreach (var tag in consumer.ConsumerTags)
+                _channel.BasicCancel(tag);
+        });
+    }
+
 
     public void Dispose()
     {

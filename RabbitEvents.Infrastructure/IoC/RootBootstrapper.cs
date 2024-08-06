@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace RabbitEvents.Infrastructure.IoC;
+﻿namespace RabbitEvents.Infrastructure.IoC;
 
 public class RootBootstrapper
 {
@@ -13,7 +10,7 @@ public class RootBootstrapper
 
         new MassTransitBoostrapper().Register(services);
 
-        new ServicesBootstrapper().ServicesRegister(services);
+        new ServicesBootstrapper().ServicesRegister(services, config);
 
         new RepositoriesBootstrapper().RepositoriesRegister(services);
     }
