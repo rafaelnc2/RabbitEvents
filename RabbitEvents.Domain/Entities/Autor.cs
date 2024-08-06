@@ -71,4 +71,10 @@ public sealed class Autor : Entity
 
         Raise(new AutorAtualizadoEvent(Id, imageName));
     }
+
+
+    public void SetImage(string imageName)
+    {
+        Imagem = imageName;
+    }
 }
