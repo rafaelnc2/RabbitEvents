@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using RabbitEvents.Shared.Models.Messaging;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
@@ -12,6 +10,9 @@ public sealed class QueueService : IQueueService, IDisposable
     private readonly IModel _channel;
 
     private const int NON_PERSISTENT_DELIVERYMODE = 1;
+    private const int RABBITMQ_PREFETCH_SIZE = 0;
+    private const int RABBITMQ_PREFETCH_COUNT = 10;
+    private const bool RABBITMQ_GLOBAL_CONFIG = false;
 
     public QueueService(IConfiguration config)
     {
@@ -20,6 +21,8 @@ public sealed class QueueService : IQueueService, IDisposable
         _connection = factory.CreateConnection();
 
         _channel = _connection.CreateModel();
+
+        _channel.BasicQos(RABBITMQ_PREFETCH_SIZE, RABBITMQ_PREFETCH_COUNT, RABBITMQ_GLOBAL_CONFIG);
     }
 
     private void ExchangeDeclare(string exchange, string exchangeType) =>

@@ -7,6 +7,7 @@ namespace RabbitEvents.Application.Services;
 public sealed class AutorService(
     ILogger<AutorService> Logger,
     IAutorRedisRepository AutorRedisRepository,
+    ICacheService CacheService,
     IBus Bus) : IAutorDomainService
 {
     public async Task<ApiResponse<CriarAutorResponse>> CriarAsync(CriarAutorInput criarInput)
@@ -17,12 +18,23 @@ public sealed class AutorService(
 
         var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia);
 
-        var result = await AutorRedisRepository.CriarAsync(autor, criarInput.Imagem?.GetByteArray());
+        var result = await AutorRedisRepository.CriarAsync(autor);
 
         if (criarInput.Imagem is not null)
         {
-            var imageIntegrationEvent = new AutorComImagemCriadoEvent(autor.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
-            await Bus.Publish((object)imageIntegrationEvent);
+            var fileExtension = criarInput.Imagem.GetFileExtension();
+
+            autor.SetImage($"{autor.Id}.{fileExtension}");
+
+            await CacheService.SetValueAsync(
+                $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autor.Id}",
+                criarInput.Imagem.GetByteArray()!,
+                CacheKeysConstants.DEFAULT_EXPIRES
+            )!;
+
+            var autorComImagemCriadoEvent = new AutorComImagemCriadoEvent(autor.Id, fileExtension, criarInput.Imagem.ContentType);
+
+            await Bus.Publish((object)autorComImagemCriadoEvent);
         }
 
         var autorResponse = AutorMap.ToCriarAutorResponse(result);

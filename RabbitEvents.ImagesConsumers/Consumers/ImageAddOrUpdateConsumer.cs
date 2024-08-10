@@ -1,7 +1,5 @@
 ﻿using RabbitEvents.Application.Interfaces;
 using RabbitEvents.Shared.Constants;
-using RabbitEvents.Shared.Dtos;
-using System.Text.Json;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 
@@ -57,13 +55,11 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
             return;
         }
 
-        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{messageBody.ImageId}";
-
-        var cachedAutorImage = await _cacheService.GetBytesValueAsync(authorIdCacheKey);
+        var cachedAutorImage = await _cacheService.GetBytesValueAsync(messageBody.ImageId);
 
         if (cachedAutorImage is null)
         {
-            _logger.LogWarning($"A imagem {authorIdCacheKey} não existe no cache");
+            _logger.LogWarning($"A imagem {messageBody.ImageId} não existe no cache");
             return;
         }
 
@@ -73,6 +69,6 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
 
         var uploadedFile = await _blobService.UploadFileAsync(BlobContainerName, stream, fileName, messageBody.ContentType, CancellationToken.None);
 
-        await _cacheService.DeleteValueAsync(authorIdCacheKey);
+        await _cacheService.DeleteValueAsync(messageBody.ImageId);
     }
 }
