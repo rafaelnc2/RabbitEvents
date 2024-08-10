@@ -1,5 +1,8 @@
 ﻿using RabbitEvents.Application.Interfaces;
 using RabbitEvents.Shared.Constants;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Processing;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 
@@ -63,12 +66,40 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
             return;
         }
 
-        string fileName = $"{messageBody.ImageId}.{messageBody.FileExtension}";
+        string fileName = ProcessFileName($"{messageBody.ImageId}.{messageBody.FileExtension}");
 
         using Stream stream = new MemoryStream(cachedAutorImage);
 
-        var uploadedFile = await _blobService.UploadFileAsync(BlobContainerName, stream, fileName, messageBody.ContentType, CancellationToken.None);
+        using Stream resizedImageStream = await ResizeImageAsync(stream, fileName);
+
+        var uploadedFile = await _blobService.UploadFileAsync(BlobContainerName, resizedImageStream, fileName, messageBody.ContentType, CancellationToken.None);
 
         await _cacheService.DeleteValueAsync(messageBody.ImageId);
+    }
+
+    private string ProcessFileName(string currentFileName)
+    {
+        var currentFileNameSpan = currentFileName.AsSpan();
+
+        var charIndex = currentFileNameSpan.IndexOf(':');
+
+        var newFileName = currentFileNameSpan[(charIndex + 1)..];
+
+        return newFileName.ToString();
+    }
+
+    private async Task<Stream> ResizeImageAsync(Stream imageStream, string fileName)
+    {
+        var newImageStream = new MemoryStream();
+
+        using (var image = await Image.LoadAsync(imageStream))
+        {
+            image.Mutate(img => img.Resize(200, 200));
+            await image.SaveAsync(newImageStream, image.DetectEncoder(fileName));
+        }
+
+        newImageStream.Position = 0;
+
+        return newImageStream;
     }
 }
