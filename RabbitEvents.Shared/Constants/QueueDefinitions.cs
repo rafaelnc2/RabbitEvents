@@ -11,7 +11,9 @@ public static class QueueDefinitions
 
     public static Queue AUTHORS_QUEUE = new("authors", "authors");
 
-    public static Queue IMAGES_ADD_UPDATE_QUEUE = new("images_add_update", "images.add_update");
+    public static Queue AUTHORS_IMAGE_UPDATE_QUEUE = new("authors_image_update", "authors.image.update");
+
+    public static Queue IMAGES_UPLOAD_QUEUE = new("images_upload", "images.upload");
 
     public static Queue IMAGES_CREATE_QUEUE = new("images_create", "images.create");
 }

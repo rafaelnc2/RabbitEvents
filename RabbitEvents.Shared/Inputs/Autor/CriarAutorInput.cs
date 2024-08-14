@@ -2,4 +2,4 @@
 
 namespace RabbitEvents.Shared.Inputs.Autor;
 
-public record CriarAutorInput(string Nome, string Sobre, string Biografia, IFormFile? Imagem);
+public record CriarAutorInput(string Nome, string Sobre, string Biografia, string Genero, IFormFile? Imagem);

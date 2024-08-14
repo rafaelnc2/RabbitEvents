@@ -12,7 +12,7 @@ public sealed class AutorComImagemCriadoEventHandler(
     {
         Logger.LogInformation("Event handler AutorComImagemCriadoEventHandler");
 
-        var authorIdCacheKey = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{context.Message.AutorId}";
+        var authorIdCacheKey = $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}:{context.Message.AutorId}";
 
         var keyExists = await CacheService.KeyExistsAsync(authorIdCacheKey);
 
@@ -25,9 +25,9 @@ public sealed class AutorComImagemCriadoEventHandler(
             );
 
             QueueService.SendMessage(new QueueMessage(
-                Queue: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE,
+                Queue: QueueDefinitions.IMAGES_UPLOAD_QUEUE,
                 Exchange: QueueDefinitions.IMAGES_EXCHANGE,
-                RoutingKey: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE.RoutingKey,
+                RoutingKey: QueueDefinitions.IMAGES_UPLOAD_QUEUE.RoutingKey,
                 MessageBody: JsonSerializer.Serialize(messageBody)
             ));
 
