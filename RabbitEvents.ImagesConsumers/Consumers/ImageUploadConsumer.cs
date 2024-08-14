@@ -1,40 +1,37 @@
 ﻿using RabbitEvents.Application.Interfaces;
+using RabbitEvents.ImagesConsumers.Helpers;
 using RabbitEvents.Shared.Constants;
+using RabbitEvents.Shared.Models.Messaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Processing;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 
-public sealed class ImageAddOrUpdateConsumer : BackgroundService
+public sealed class ImageUploadConsumer : BackgroundService
 {
-    private readonly ILogger<ImageAddOrUpdateConsumer> _logger;
+    private readonly ILogger<ImageUploadConsumer> _logger;
     private readonly IQueueService _queueService;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ICacheService _cacheService;
     private readonly IBlobService _blobService;
 
-    private const string BlobContainerName = "author-images";
-
-    public ImageAddOrUpdateConsumer(ILogger<ImageAddOrUpdateConsumer> logger,
+    public ImageUploadConsumer(ILogger<ImageUploadConsumer> logger,
         IQueueService queueService,
-        IServiceProvider serviceProvider,
         ICacheService cacheService,
         IBlobService blobService)
     {
         _logger = logger;
         _queueService = queueService;
-        _serviceProvider = serviceProvider;
         _cacheService = cacheService;
         _blobService = blobService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation($"####################### Iniciando {nameof(ImageAddOrUpdateConsumer)} ##################################");
+        _logger.LogInformation($"####################### Iniciando {nameof(ImageUploadConsumer)} ##################################");
 
         var message = _queueService.ConsumeQueue(
-            queueName: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE.Name,
+            queueName: QueueDefinitions.IMAGES_UPLOAD_QUEUE.Name,
             messageHandlerAsync: HandleMessageConsumerAsync,
             cancellationToken: stoppingToken
         );
@@ -66,26 +63,19 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
             return;
         }
 
-        string fileName = ProcessFileName($"{messageBody.ImageId}.{messageBody.FileExtension}");
+        string fileNameMessage = $"{messageBody.ImageId}.{messageBody.FileExtension}";
+
+        string fileName = ProcessFileName.GetTextAfterSeparator(fileNameMessage, CacheKeysConstants.KEY_SEPARATOR);
 
         using Stream stream = new MemoryStream(cachedAutorImage);
 
         using Stream resizedImageStream = await ResizeImageAsync(stream, fileName);
 
-        var uploadedFile = await _blobService.UploadFileAsync(BlobContainerName, resizedImageStream, fileName, messageBody.ContentType, CancellationToken.None);
+        var uploadedFile = await _blobService.UploadFileAsync(BlobStorageConstants.AuthoImageContainerName, resizedImageStream, fileName, messageBody.ContentType, CancellationToken.None);
+
+        SendImageUpdateToQueue(message);
 
         await _cacheService.DeleteValueAsync(messageBody.ImageId);
-    }
-
-    private string ProcessFileName(string currentFileName)
-    {
-        var currentFileNameSpan = currentFileName.AsSpan();
-
-        var charIndex = currentFileNameSpan.IndexOf(':');
-
-        var newFileName = currentFileNameSpan[(charIndex + 1)..];
-
-        return newFileName.ToString();
     }
 
     private async Task<Stream> ResizeImageAsync(Stream imageStream, string fileName)
@@ -94,12 +84,22 @@ public sealed class ImageAddOrUpdateConsumer : BackgroundService
 
         using (var image = await Image.LoadAsync(imageStream))
         {
-            image.Mutate(img => img.Resize(200, 200));
+            image.Mutate(img => img.Resize(ImageDefinitions.DEFAULT_WIDTH, ImageDefinitions.DEFAULT_HEIGHT));
             await image.SaveAsync(newImageStream, image.DetectEncoder(fileName));
         }
 
         newImageStream.Position = 0;
 
         return newImageStream;
+    }
+
+    private void SendImageUpdateToQueue(string messageBody)
+    {
+        _queueService.SendMessage(new QueueMessage(
+            Queue: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE,
+            Exchange: QueueDefinitions.AUTHORS_EXCHANGE,
+            RoutingKey: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE.RoutingKey,
+            MessageBody: messageBody
+        ));
     }
 }
