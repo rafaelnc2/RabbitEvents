@@ -16,7 +16,7 @@ public sealed class AutorService(
 
         var response = new ApiResponse<CriarAutorResponse>();
 
-        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia);
+        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
 
         var result = await AutorRedisRepository.CriarAsync(autor);
 
@@ -24,10 +24,8 @@ public sealed class AutorService(
         {
             var fileExtension = criarInput.Imagem.GetFileExtension();
 
-            autor.SetImage($"{autor.Id}.{fileExtension}");
-
             await CacheService.SetValueAsync(
-                $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autor.Id}",
+                $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}{CacheKeysConstants.KEY_SEPARATOR}{autor.Id}",
                 criarInput.Imagem.GetByteArray()!,
                 CacheKeysConstants.DEFAULT_EXPIRES
             )!;

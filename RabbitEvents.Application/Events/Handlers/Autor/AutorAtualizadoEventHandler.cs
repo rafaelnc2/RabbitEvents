@@ -23,16 +23,16 @@ public sealed class AutorAtualizadoEventHandler(
             MessageBody: autorId.ToString()
         ));
 
-        var messageBody = $"{CacheKeysConstants.AUTOR_IMAGE_KEY}:{autorId}";
+        var messageBody = $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}:{autorId}";
 
         var keyExists = await CacheService.KeyExistsAsync(messageBody);
 
         if (keyExists is true && string.IsNullOrEmpty(imageName) is false)
         {
             QueueService.SendMessage(new QueueMessage(
-                Queue: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE,
+                Queue: QueueDefinitions.IMAGES_UPLOAD_QUEUE,
                 Exchange: QueueDefinitions.IMAGES_EXCHANGE,
-                RoutingKey: QueueDefinitions.IMAGES_ADD_UPDATE_QUEUE.RoutingKey,
+                RoutingKey: QueueDefinitions.IMAGES_UPLOAD_QUEUE.RoutingKey,
                 MessageBody: messageBody
             ));
         }
