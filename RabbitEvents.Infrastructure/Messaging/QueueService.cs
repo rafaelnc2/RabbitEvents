@@ -4,6 +4,8 @@ using System.Text;
 
 namespace RabbitEvents.Infrastructure.Messaging;
 
+//Criar dead letter para enviar a mensagem após 5 tentivas de consumo
+
 public sealed class QueueService : IQueueService, IDisposable
 {
     private readonly IConnection _connection;
@@ -32,12 +34,12 @@ public sealed class QueueService : IQueueService, IDisposable
                                  autoDelete: false,
                                  arguments: null);
 
-    private void QueueDeclare(string queue) =>
-        _channel.QueueDeclare(queue: queue,
+    private void QueueDeclare(Queue queue) =>
+        _channel.QueueDeclare(queue: queue.Name,
                               durable: true,
                               exclusive: false,
                               autoDelete: false,
-                              arguments: null);
+                              arguments: queue.QueueArguments);
 
     private void QueueBind(string queue, string exchange, string routingKey) =>
         _channel.QueueBind(queue: queue,
@@ -50,10 +52,26 @@ public sealed class QueueService : IQueueService, IDisposable
         {
             ExchangeDeclare(exchange.Name, exchange.Type);
 
-            QueueDeclare(queue.Name);
+            QueueDeclare(queue);
 
             if (string.IsNullOrEmpty(exchange.Name) is false && string.IsNullOrEmpty(queue.RoutingKey) is false)
                 QueueBind(queue.Name, exchange.Name, queue.RoutingKey);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public void CreateDeadLetterQueue(Queue queue, Exchange exchange)
+    {
+        try
+        {
+            ExchangeDeclare(exchange.Name, exchange.Type);
+
+            QueueDeclare(queue);
+
+            QueueBind(queue.Name, exchange.Name, queue.RoutingKey);
         }
         catch (Exception)
         {
@@ -65,7 +83,7 @@ public sealed class QueueService : IQueueService, IDisposable
     {
         try
         {
-            QueueDeclare(queue.Name);
+            QueueDeclare(queue);
         }
         catch (Exception)
         {
@@ -89,6 +107,9 @@ public sealed class QueueService : IQueueService, IDisposable
         _channel.BasicPublish(message.Exchange?.Name ?? "", message.RoutingKey, props, messageBodyBytes);
     }
 
+    private void RequeueMessageToOriginalQueue(BasicDeliverEventArgs ea) =>
+        _channel.BasicPublish(ea.Exchange, ea.RoutingKey, ea.BasicProperties, ea.Body);
+
 
     public async Task ConsumeQueue(string queueName, Func<string, ulong, Task> messageHandlerAsync, CancellationToken cancellationToken)
     {
@@ -107,9 +128,9 @@ public sealed class QueueService : IQueueService, IDisposable
 
                 _channel.BasicAck(ea.DeliveryTag, false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _channel.BasicNack(ea.DeliveryTag, false, true);
+                CheckIfRequeueOrSendToDLQ(ea);
             }
         };
 
@@ -122,6 +143,43 @@ public sealed class QueueService : IQueueService, IDisposable
             foreach (var tag in consumer.ConsumerTags)
                 _channel.BasicCancel(tag);
         });
+    }
+
+    private void CheckIfRequeueOrSendToDLQ(BasicDeliverEventArgs ea)
+    {
+        var requeueOnError = (RetryCountReachedLimit(ea) is false);
+
+        if (requeueOnError is true)
+        {
+            RequeueMessageToOriginalQueue(ea);
+
+            _channel.BasicAck(ea.DeliveryTag, multiple: false);
+        }
+        else
+        {
+            _channel.BasicNack(ea.DeliveryTag, false, requeue: false);
+        }
+    }
+
+    private bool RetryCountReachedLimit(BasicDeliverEventArgs ea)
+    {
+        if (ea.BasicProperties.Headers is not null && ea.BasicProperties.Headers.ContainsKey("retry-count"))
+        {
+            var currentRetryCount = (int)ea.BasicProperties.Headers["retry-count"];
+
+            if (currentRetryCount == QueueDefinitions.MAX_RETY_COUNT)
+                return true;
+
+            ea.BasicProperties.Headers["retry-count"] = currentRetryCount + 1;
+
+            return false;
+        }
+
+        ea.BasicProperties.Headers = new Dictionary<string, object>() {
+            { "retry-count", 1 }
+        };
+
+        return false;
     }
 
 
