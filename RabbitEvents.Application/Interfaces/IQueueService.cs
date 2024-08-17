@@ -8,6 +8,8 @@ public interface IQueueService
 
     void CreateQueue(Queue queue);
 
+    void CreateDeadLetterQueue(Queue queue, Exchange exchange);
+
     void SendMessage(QueueMessage message);
 
     Task ConsumeQueue(string queueName, Func<string, ulong, Task> messageHandlerAsync, CancellationToken cancellationToken);

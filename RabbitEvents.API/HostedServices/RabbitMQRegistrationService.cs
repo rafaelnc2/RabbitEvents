@@ -20,6 +20,9 @@ public class RabbitMQRegistrationService : BackgroundService
 
         _queueService.CreateTopic(QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE, QueueDefinitions.AUTHORS_EXCHANGE);
 
+
+        _queueService.CreateDeadLetterQueue(QueueDefinitions.IMAGES_DLQ_QUEUE, QueueDefinitions.IMAGES_DLQ_EXCHANGE);
+
         _queueService.CreateTopic(QueueDefinitions.IMAGES_UPLOAD_QUEUE, QueueDefinitions.IMAGES_EXCHANGE);
 
         _queueService.CreateTopic(QueueDefinitions.IMAGES_CREATE_QUEUE, QueueDefinitions.IMAGES_EXCHANGE);

@@ -46,13 +46,15 @@ public sealed class ImageUploadConsumer : BackgroundService
         if (messageBody is null)
         {
             _logger.LogError($"Problemas para deserializar a mensagem {message}");
-            return;
+
+            throw new Exception($"Problemas para deserializar a mensagem {message}");
         }
 
         if (string.IsNullOrWhiteSpace(messageBody.ImageId) || string.IsNullOrWhiteSpace(messageBody.FileExtension) || string.IsNullOrWhiteSpace(messageBody.ContentType))
         {
             _logger.LogError($"Erro ao obter dados da imagem. Mensagem: {message}");
-            return;
+
+            throw new Exception($"Erro ao obter dados da imagem. Mensagem: {message}");
         }
 
         var cachedAutorImage = await _cacheService.GetBytesValueAsync(messageBody.ImageId);
@@ -60,7 +62,8 @@ public sealed class ImageUploadConsumer : BackgroundService
         if (cachedAutorImage is null)
         {
             _logger.LogWarning($"A imagem {messageBody.ImageId} não existe no cache");
-            return;
+
+            throw new Exception($"A imagem {messageBody.ImageId} não existe no cache");
         }
 
         string fileNameMessage = $"{messageBody.ImageId}.{messageBody.FileExtension}";
