@@ -1,27 +1,27 @@
 ﻿namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
 
-public class AutorRedisRepository
+public class AuthorRedisRepository
 {
     private readonly RedisConnectionProvider _provider;
-    private readonly RedisCollection<Autor> _autorCollection;
+    private readonly RedisCollection<Author> _autorCollection;
     private readonly IDatabase _database;
     private readonly ICacheService _cacheService;
 
-    public AutorRedisRepository(IConnectionMultiplexer redisMultiplexerConnect, ICacheService cacheService)
+    public AuthorRedisRepository(IConnectionMultiplexer redisMultiplexerConnect, ICacheService cacheService)
     {
         _database = redisMultiplexerConnect.GetDatabase();
         _provider = new RedisConnectionProvider(redisMultiplexerConnect);
-        _autorCollection = (RedisCollection<Autor>)_provider.RedisCollection<Autor>();
+        _autorCollection = (RedisCollection<Author>)_provider.RedisCollection<Author>();
         _cacheService = cacheService;
     }
 
-    public async Task<Autor> CriarAsync(Autor autor)
+    public async Task<Author> CriarAsync(Author autor)
     {
         await _autorCollection.InsertAsync(autor);
 
         return autor;
     }
-    public async Task<Autor> CriarAsync(Autor autor, byte[]? imageInBytes)
+    public async Task<Author> CriarAsync(Author autor, byte[]? imageInBytes)
     {
         var taskList = new List<Task>();
 
@@ -34,14 +34,14 @@ public class AutorRedisRepository
         return autor;
     }
 
-    public async Task<Autor> AtualizarAsync(Autor autor)
+    public async Task<Author> AtualizarAsync(Author autor)
     {
         await _autorCollection.UpdateAsync(autor);
 
         return autor;
     }
 
-    public async Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes)
+    public async Task<Author> AtualizarAsync(Author autor, byte[]? imageInBytes)
     {
         var taskList = new List<Task>();
 
@@ -54,10 +54,10 @@ public class AutorRedisRepository
         return autor;
     }
 
-    public async Task<Autor?> ObterPorIdAsync(string autorId) =>
+    public async Task<Author?> ObterPorIdAsync(string autorId) =>
         await _autorCollection.FindByIdAsync(autorId);
 
-    public async Task<IEnumerable<Autor>> ObterTodosAsync() =>
+    public async Task<IEnumerable<Author>> ObterTodosAsync() =>
         await _autorCollection.ToListAsync();
 
 

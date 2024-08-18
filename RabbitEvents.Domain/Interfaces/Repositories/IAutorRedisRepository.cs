@@ -2,15 +2,15 @@
 
 public interface IAutorRedisRepository
 {
-    Task<Autor> CriarAsync(Autor autor);
+    Task<Author> CriarAsync(Author autor);
 
-    Task<Autor> CriarAsync(Autor autor, byte[]? imageInBytes);
+    Task<Author> CriarAsync(Author autor, byte[]? imageInBytes);
 
-    Task<Autor> AtualizarAsync(Autor autor);
+    Task<Author> AtualizarAsync(Author autor);
 
-    Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes);
+    Task<Author> AtualizarAsync(Author autor, byte[]? imageInBytes);
 
-    Task<Autor?> ObterPorIdAsync(string autorId);
+    Task<Author?> ObterPorIdAsync(string autorId);
 
-    Task<IEnumerable<Autor>> ObterTodosAsync();
+    Task<IEnumerable<Author>> ObterTodosAsync();
 }

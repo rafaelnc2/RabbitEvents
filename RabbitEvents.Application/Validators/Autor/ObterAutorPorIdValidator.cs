@@ -3,7 +3,7 @@ using RabbitEvents.Shared.Inputs.Autor;
 
 namespace RabbitEvents.Application.Validators.Autor;
 
-public class ObterAutorPorIdValidator : AbstractValidator<ObterAutorPorIdInput>
+public class ObterAutorPorIdValidator : AbstractValidator<GetAuthorByIdInput>
 {
     public ObterAutorPorIdValidator()
     {

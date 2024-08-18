@@ -8,7 +8,7 @@ public class RepositoriesBootstrapper
 {
     public void RepositoriesRegister(IServiceCollection services)
     {
-        services.AddTransient<AutorRedisRepository>();
-        services.AddScoped<IAutorRedisRepository, AutorRedisDecoratedRepository>();
+        services.AddTransient<AuthorRedisRepository>();
+        services.AddScoped<IAutorRedisRepository, AuthorRedisDecoratedRepository>();
     }
 }

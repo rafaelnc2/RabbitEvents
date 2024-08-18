@@ -5,19 +5,19 @@ using RabbitEvents.Shared.Responses.Autor;
 
 namespace RabbitEvents.Application.Services;
 
-public sealed class AutorService(
-    ILogger<AutorService> Logger,
+public sealed class AuthorService(
+    ILogger<AuthorService> Logger,
     IAutorRedisRepository AutorRedisRepository,
     ICacheService CacheService,
-    IBus Bus) : IAutorDomainService
+    IBus Bus) : IAuthorDomainService
 {
-    public async Task<ApiResponse<CriarAutorResponse>> CriarAsync(CriarAutorInput criarInput)
+    public async Task<ApiResponse<CreateAuthorResponse>> CriarAsync(CreateAuthorInput criarInput)
     {
         Logger.LogInformation("Criando novo Autor");
 
-        var response = new ApiResponse<CriarAutorResponse>();
+        var response = new ApiResponse<CreateAuthorResponse>();
 
-        var autor = Autor.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
+        var autor = Author.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
 
         var result = await AutorRedisRepository.CriarAsync(autor);
 
@@ -32,7 +32,7 @@ public sealed class AutorService(
                 CacheKeysConstants.DEFAULT_EXPIRES
             )!;
 
-            var autorComImagemCriadoEvent = new AutorComImagemCriadoEvent(autor.Id, fileExtension, criarInput.Imagem.ContentType);
+            var autorComImagemCriadoEvent = new AuthorWithImageCreatedEvent(autor.Id, fileExtension, criarInput.Imagem.ContentType);
 
             await Bus.Publish((object)autorComImagemCriadoEvent);
         }
@@ -50,11 +50,11 @@ public sealed class AutorService(
         return response.CreatedResponse(autorResponse);
     }
 
-    public async Task<ApiResponse<AutorResponse>> AtualizarAsync(AtualizarAutorInput atualizarInput)
+    public async Task<ApiResponse<AuthorResponse>> AtualizarAsync(UpdateAuthorInput atualizarInput)
     {
         Logger.LogInformation($"Atualizando Autor ID: {atualizarInput.Id}");
 
-        var response = new ApiResponse<AutorResponse>();
+        var response = new ApiResponse<AuthorResponse>();
 
         var autor = await AutorRedisRepository.ObterPorIdAsync(atualizarInput.Id!);
 
@@ -72,11 +72,11 @@ public sealed class AutorService(
         return response.OkResponse(autorResponse);
     }
 
-    public async Task<ApiResponse<AutorResponse>> ObterPorIdAsync(ObterAutorPorIdInput obterAutorPorIdInput)
+    public async Task<ApiResponse<AuthorResponse>> ObterPorIdAsync(GetAuthorByIdInput obterAutorPorIdInput)
     {
         Logger.LogInformation($"Obter Autor por ID: {obterAutorPorIdInput.Id}");
 
-        var response = new ApiResponse<AutorResponse>();
+        var response = new ApiResponse<AuthorResponse>();
 
         var autor = await AutorRedisRepository.ObterPorIdAsync(obterAutorPorIdInput.Id);
 
@@ -90,11 +90,11 @@ public sealed class AutorService(
         return response.OkResponse(autorResponse);
     }
 
-    public async Task<ApiResponse<IEnumerable<AutorResponse>>> ObterTodosAsync()
+    public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync()
     {
         Logger.LogInformation("Obter todos os Autores");
 
-        var response = new ApiResponse<IEnumerable<AutorResponse>>();
+        var response = new ApiResponse<IEnumerable<AuthorResponse>>();
 
         var autores = await AutorRedisRepository.ObterTodosAsync();
 

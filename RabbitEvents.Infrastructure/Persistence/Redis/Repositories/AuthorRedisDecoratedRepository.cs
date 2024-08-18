@@ -1,17 +1,17 @@
 ﻿namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
 
-internal class AutorRedisDecoratedRepository : IAutorRedisRepository
+internal class AuthorRedisDecoratedRepository : IAutorRedisRepository
 {
-    private readonly AutorRedisRepository _autorRedisRepository;
+    private readonly AuthorRedisRepository _autorRedisRepository;
     private readonly IBus _bus;
 
-    public AutorRedisDecoratedRepository(AutorRedisRepository autorRedisRepository, IBus bus)
+    public AuthorRedisDecoratedRepository(AuthorRedisRepository autorRedisRepository, IBus bus)
     {
         _autorRedisRepository = autorRedisRepository;
         _bus = bus;
     }
 
-    public async Task<Autor> CriarAsync(Autor autor)
+    public async Task<Author> CriarAsync(Author autor)
     {
         await _autorRedisRepository.CriarAsync(autor);
 
@@ -20,7 +20,7 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
         return autor;
     }
 
-    public async Task<Autor> CriarAsync(Autor autor, byte[]? imageInBytes)
+    public async Task<Author> CriarAsync(Author autor, byte[]? imageInBytes)
     {
         await _autorRedisRepository.CriarAsync(autor, imageInBytes);
 
@@ -29,7 +29,7 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
         return autor;
     }
 
-    public async Task<Autor> AtualizarAsync(Autor autor)
+    public async Task<Author> AtualizarAsync(Author autor)
     {
         await _autorRedisRepository.AtualizarAsync(autor);
 
@@ -38,7 +38,7 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
         return autor;
     }
 
-    public async Task<Autor> AtualizarAsync(Autor autor, byte[]? imageInBytes)
+    public async Task<Author> AtualizarAsync(Author autor, byte[]? imageInBytes)
     {
         await _autorRedisRepository.AtualizarAsync(autor, imageInBytes);
 
@@ -48,10 +48,10 @@ internal class AutorRedisDecoratedRepository : IAutorRedisRepository
     }
 
 
-    public Task<Autor?> ObterPorIdAsync(string autorId) =>
+    public Task<Author?> ObterPorIdAsync(string autorId) =>
         _autorRedisRepository.ObterPorIdAsync(autorId);
 
-    public Task<IEnumerable<Autor>> ObterTodosAsync() =>
+    public Task<IEnumerable<Author>> ObterTodosAsync() =>
         _autorRedisRepository.ObterTodosAsync();
 
 

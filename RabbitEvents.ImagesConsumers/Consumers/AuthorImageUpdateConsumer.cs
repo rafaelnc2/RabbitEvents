@@ -61,7 +61,7 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
 
         GetAutorRepository();
 
-        Autor? author = await _autorRedisRepository!.ObterPorIdAsync(entityId);
+        Author? author = await _autorRedisRepository!.ObterPorIdAsync(entityId);
 
         if (author is null)
         {

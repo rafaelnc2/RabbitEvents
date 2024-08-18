@@ -3,7 +3,7 @@
 namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.AutorHandlers;
 
 public sealed class AuthorWithoutImageCreatedEventHandler(
-    ILogger<AutorComImagemCriadoEventHandler> Logger,
+    ILogger<AuthorWithImageCreatedEventHandler> Logger,
     IQueueService QueueService
 ) : IConsumer<AuthorWithoutImageCreatedEvent>
 {

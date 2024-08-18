@@ -19,7 +19,7 @@ public class RedisIndexCreationService : BackgroundService
     {
         _logger.LogInformation("Criando índices no Redis");
 
-        foreach (var item in ListaIndicesParaCriar())
+        foreach (var item in ListIndexesToCreate())
         {
             var created = await _provider.Connection.CreateIndexAsync(item);
 
@@ -30,9 +30,9 @@ public class RedisIndexCreationService : BackgroundService
         }
     }
 
-    private IEnumerable<Type> ListaIndicesParaCriar() =>
+    private IEnumerable<Type> ListIndexesToCreate() =>
         new List<Type>()
         {
-            typeof(Autor)
+            typeof(Author)
         };
 }

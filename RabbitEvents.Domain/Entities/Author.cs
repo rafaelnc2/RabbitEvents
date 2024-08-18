@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 
 namespace RabbitEvents.Domain.Entities;
 
-[Document(StorageType = StorageType.Json, Prefixes = ["Autor"])]
-public sealed class Autor : Entity
+[Document(StorageType = StorageType.Json, Prefixes = ["Author"])]
+public sealed class Author : Entity
 {
     [JsonConstructor]
-    private Autor(Guid id, string nome, string sobre, string biografia, string genero, string? imagem, DateTime dataCriacao, DateTime? dataAtualizacao)
+    private Author(Guid id, string nome, string sobre, string biografia, string genero, string? imagem, DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = id;
 
@@ -40,11 +40,11 @@ public sealed class Autor : Entity
     public List<Livro>? Livros { get; private set; }
 
 
-    public static Autor Create(string nome, string sobre, string biografia, string genero)
+    public static Author Create(string nome, string sobre, string biografia, string genero)
     {
         var newId = Guid.NewGuid();
 
-        var autor = new Autor(
+        var autor = new Author(
             id: newId,
 
             nome: nome.Trim(),
