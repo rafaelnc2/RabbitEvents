@@ -11,7 +11,7 @@ public static class QueueDefinitions
 
     public static Exchange IMAGES_EXCHANGE = new("images_exchange", "topic");
 
-    public static Exchange IMAGES_DLQ_EXCHANGE = new("image_dlq_exchange", "topic");
+    public static Exchange IMAGES_DLQ_EXCHANGE = new("image_dlq_exchange", "direct");
 
 
 
@@ -27,5 +27,8 @@ public static class QueueDefinitions
         { "x-dead-letter-exchange", IMAGES_DLQ_EXCHANGE.Name }
     });
 
-    public static Queue IMAGES_CREATE_QUEUE = new("images_create", "images.create");
+    public static Queue IMAGES_CREATE_QUEUE = new("images_create", "images.create", new Dictionary<string, object>()
+    {
+        { "x-dead-letter-exchange", IMAGES_DLQ_EXCHANGE.Name }
+    });
 }

@@ -1,4 +1,5 @@
-﻿using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
+﻿using RabbitEvents.Domain.IntegrationEvents.AutorEvents;
+using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
 using RabbitEvents.Shared.Inputs.Autor;
 using RabbitEvents.Shared.Responses.Autor;
 
@@ -20,6 +21,7 @@ public sealed class AutorService(
 
         var result = await AutorRedisRepository.CriarAsync(autor);
 
+        //Criar service para imagens
         if (criarInput.Imagem is not null)
         {
             var fileExtension = criarInput.Imagem.GetFileExtension();
@@ -33,6 +35,12 @@ public sealed class AutorService(
             var autorComImagemCriadoEvent = new AutorComImagemCriadoEvent(autor.Id, fileExtension, criarInput.Imagem.ContentType);
 
             await Bus.Publish((object)autorComImagemCriadoEvent);
+        }
+        else
+        {
+            var authorWithoutImageCreatedEvent = new AuthorWithoutImageCreatedEvent(autor.Id, autor.Nome);
+
+            await Bus.Publish((object)authorWithoutImageCreatedEvent);
         }
 
         var autorResponse = AutorMap.ToCriarAutorResponse(result);

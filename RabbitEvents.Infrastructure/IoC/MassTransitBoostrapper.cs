@@ -11,7 +11,9 @@ internal class MassTransitBoostrapper
         {
             x.AddConsumer<AutorCriadoEventHandler>();
             x.AddConsumer<AutorAtualizadoEventHandler>();
+
             x.AddConsumer<AutorComImagemCriadoEventHandler>();
+            x.AddConsumer<AuthorWithoutImageCreatedEventHandler>();
 
             x.UsingInMemory((context, cfg) =>
             {
