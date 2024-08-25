@@ -2,7 +2,7 @@
 
 namespace RabbitEvents.Application.Mappings;
 
-public static class AutorMap
+public static class AuthorMap
 {
     public static AuthorResponse ToAutorResponse(Author autor) =>
         new AuthorResponse(
@@ -10,6 +10,7 @@ public static class AutorMap
             autor.Nome,
             autor.Sobre,
             autor.Biografia,
+            autor.Genero,
             string.IsNullOrWhiteSpace(autor.Imagem) ? "default.jpeg" : autor.Imagem,
             autor.DataCriacao,
             autor.DataAtualizacao
@@ -21,6 +22,7 @@ public static class AutorMap
             autor.Nome,
             autor.Sobre,
             autor.Biografia,
+            autor.Genero,
             string.IsNullOrWhiteSpace(autor.Imagem) ? "default.jpeg" : autor.Imagem,
             autor.DataCriacao
         );

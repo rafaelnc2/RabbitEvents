@@ -1,5 +1,5 @@
-﻿using RabbitEvents.Application.Events.Handlers.Autor;
-using RabbitEvents.Infrastructure.IntegrationEvents.Handlers.AutorHandlers;
+﻿using RabbitEvents.Application.Events.Handlers.Authors;
+using RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Authors;
 
 namespace RabbitEvents.Infrastructure.IoC;
 
@@ -9,8 +9,8 @@ internal class MassTransitBoostrapper
     {
         services.AddMassTransit(x =>
         {
-            x.AddConsumer<AutorCriadoEventHandler>();
-            x.AddConsumer<AutorAtualizadoEventHandler>();
+            x.AddConsumer<AuthorCreatedEventHandler>();
+            x.AddConsumer<AuthorUpdatedEventHandler>();
 
             x.AddConsumer<AuthorWithImageCreatedEventHandler>();
             x.AddConsumer<AuthorWithoutImageCreatedEventHandler>();

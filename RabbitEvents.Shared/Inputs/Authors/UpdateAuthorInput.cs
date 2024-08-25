@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RabbitEvents.Shared.Inputs.Autor;
+namespace RabbitEvents.Shared.Inputs.Authors;
 
-public record UpdateAuthorInput(string Nome, string Sobre, string Biografia, IFormFile? Imagem)
+public record UpdateAuthorInput(string Nome, string Sobre, string Biografia, string Genero, IFormFile? Imagem)
 {
     [SwaggerSchema(ReadOnly = true)]
     public string? Id { get; set; }

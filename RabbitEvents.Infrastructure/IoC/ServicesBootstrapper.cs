@@ -9,6 +9,8 @@ internal class ServicesBootstrapper
         services.AddSingleton<IBlobService, BlobService>();
         services.AddSingleton(_ => new BlobServiceClient(config.GetConnectionString("BlobStorage")));
 
+        services.AddScoped<ImageService>();
+
         services.AddScoped<IAuthorDomainService, AuthorService>();
     }
 }
