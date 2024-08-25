@@ -4,8 +4,8 @@ namespace RabbitEvents.Application.Mappings;
 
 public static class AutorMap
 {
-    public static AutorResponse ToAutorResponse(Autor autor) =>
-        new AutorResponse(
+    public static AuthorResponse ToAutorResponse(Author autor) =>
+        new AuthorResponse(
             autor.Id,
             autor.Nome,
             autor.Sobre,
@@ -15,8 +15,8 @@ public static class AutorMap
             autor.DataAtualizacao
         );
 
-    public static CriarAutorResponse ToCriarAutorResponse(Autor autor) =>
-        new CriarAutorResponse(
+    public static CreateAuthorResponse ToCriarAutorResponse(Author autor) =>
+        new CreateAuthorResponse(
             autor.Id,
             autor.Nome,
             autor.Sobre,

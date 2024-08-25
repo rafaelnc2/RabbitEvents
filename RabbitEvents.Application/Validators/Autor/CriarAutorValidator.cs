@@ -4,7 +4,7 @@ using RabbitEvents.Shared.Inputs.Autor;
 
 namespace RabbitEvents.Application.Validators.Autor;
 
-public class CriarAutorValidator : AbstractValidator<CriarAutorInput>, FluentValidation.IValidator
+public class CriarAutorValidator : AbstractValidator<CreateAuthorInput>, FluentValidation.IValidator
 {
     public CriarAutorValidator()
     {

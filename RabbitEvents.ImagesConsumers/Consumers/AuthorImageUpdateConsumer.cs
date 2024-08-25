@@ -7,6 +7,10 @@ using RabbitEvents.Shared.Constants;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 
+/*
+    Consumidor da fila que atualiza o nome da imagem do autor após upload do arquivo
+ */
+
 public sealed class AuthorImageUpdateConsumer : BackgroundService
 {
     private readonly ILogger<AuthorImageUpdateConsumer> _logger;
@@ -31,6 +35,8 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
             messageHandlerAsync: HandleMessageConsumerAsync,
             cancellationToken: stoppingToken
         );
+
+        await Task.CompletedTask;
     }
 
     private async Task HandleMessageConsumerAsync(string message, ulong deliveryTag)
@@ -42,13 +48,15 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
         if (messageBody is null)
         {
             _logger.LogError($"Problemas para deserializar a mensagem {message}");
-            return;
+
+            throw new Exception($"Problemas para deserializar a mensagem {message}");
         }
 
         if (string.IsNullOrWhiteSpace(messageBody.ImageId) || string.IsNullOrWhiteSpace(messageBody.FileExtension) || string.IsNullOrWhiteSpace(messageBody.ContentType))
         {
             _logger.LogError($"Erro ao obter dados da mensagem. Mensagem: {message}");
-            return;
+
+            throw new Exception($"Erro ao obter dados da mensagem. Mensagem: {message}");
         }
 
         string entityId = ProcessFileName.GetTextAfterSeparator(messageBody.ImageId, CacheKeysConstants.KEY_SEPARATOR);
@@ -56,17 +64,19 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
         if (string.IsNullOrWhiteSpace(entityId) || GuidValidator.Validate(entityId) is false)
         {
             _logger.LogError($"ImageId inválido. Mensagem: {message}");
-            return;
+
+            throw new Exception($"ImageId inválido. Mensagem: {message}");
         }
 
         GetAutorRepository();
 
-        Autor? author = await _autorRedisRepository!.ObterPorIdAsync(entityId);
+        Author? author = await _autorRedisRepository!.ObterPorIdAsync(entityId);
 
         if (author is null)
         {
             _logger.LogError($"Autor com Id {entityId} não foi encontrado. Mensagem: {message}");
-            return;
+
+            throw new Exception($"Autor com Id {entityId} não foi encontrado. Mensagem: {message}");
         }
 
         string newFileName = $"{entityId}.{messageBody.FileExtension}";

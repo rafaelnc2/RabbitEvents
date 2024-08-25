@@ -2,17 +2,17 @@
 
 namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.AutorHandlers;
 
-public sealed class AutorComImagemCriadoEventHandler(
-    ILogger<AutorComImagemCriadoEventHandler> Logger,
+public sealed class AuthorWithImageCreatedEventHandler(
+    ILogger<AuthorWithImageCreatedEventHandler> Logger,
     ICacheService CacheService,
     IQueueService QueueService
-) : IConsumer<AutorComImagemCriadoEvent>
+) : IConsumer<AuthorWithImageCreatedEvent>
 {
-    public async Task Consume(ConsumeContext<AutorComImagemCriadoEvent> context)
+    public async Task Consume(ConsumeContext<AuthorWithImageCreatedEvent> context)
     {
-        Logger.LogInformation("Event handler AutorComImagemCriadoEventHandler");
+        Logger.LogInformation("Event handler AuthorWithImageCreatedEventHandler");
 
-        var authorIdCacheKey = $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}:{context.Message.AutorId}";
+        var authorIdCacheKey = $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}:{context.Message.AuthorId}";
 
         var keyExists = await CacheService.KeyExistsAsync(authorIdCacheKey);
 

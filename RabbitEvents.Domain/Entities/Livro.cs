@@ -2,7 +2,7 @@
 
 public sealed class Livro : Entity
 {
-    private Livro(Guid id, string titulo, string descricao, Autor autor, string edicao, int anoPublicacao, string editora, double preco,
+    private Livro(Guid id, string titulo, string descricao, Author autor, string edicao, int anoPublicacao, string editora, double preco,
         DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = id;
@@ -21,14 +21,14 @@ public sealed class Livro : Entity
 
     public string Titulo { get; private set; }
     public string Descricao { get; private set; }
-    public Autor Autor { get; private set; }
+    public Author Autor { get; private set; }
     public string Edicao { get; private set; }
     public int AnoPublicacao { get; set; }
     public string Editora { get; private set; }
     public double Preco { get; private set; }
 
 
-    public static Livro Create(string titulo, string descricao, Autor autor, string edicao, int anoPublicacao, string editora, double preco)
+    public static Livro Create(string titulo, string descricao, Author autor, string edicao, int anoPublicacao, string editora, double preco)
     {
         var livro = new Livro(
             id: Guid.NewGuid(),
@@ -46,7 +46,7 @@ public sealed class Livro : Entity
         return livro;
     }
 
-    public void Update(string titulo, string descricao, Autor autor, string edicao, int anoPublicacao, string editora, double preco)
+    public void Update(string titulo, string descricao, Author autor, string edicao, int anoPublicacao, string editora, double preco)
     {
         Titulo = titulo;
         Descricao = descricao;
