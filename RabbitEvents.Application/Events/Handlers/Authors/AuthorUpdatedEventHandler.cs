@@ -8,7 +8,7 @@ public sealed class AuthorUpdatedEventHandler(
     IQueueService QueueService
 ) : IConsumer<AuthorUpdatedEvent>
 {
-    public async Task Consume(ConsumeContext<AuthorUpdatedEvent> context)
+    public Task Consume(ConsumeContext<AuthorUpdatedEvent> context)
     {
         Logger.LogInformation("Criado Event handler AutorAtualizado");
 
@@ -20,5 +20,7 @@ public sealed class AuthorUpdatedEventHandler(
             RoutingKey: "authors",
             MessageBody: authorId.ToString()
         ));
+
+        return Task.CompletedTask;
     }
 }
