@@ -1,6 +1,6 @@
 ﻿using RabbitEvents.Domain.IntegrationEvents.AutorEvents;
 using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
-using RabbitEvents.Shared.Inputs.Autor;
+using RabbitEvents.Shared.Inputs.Authors;
 using RabbitEvents.Shared.Responses.Autor;
 
 namespace RabbitEvents.Application.Services;
