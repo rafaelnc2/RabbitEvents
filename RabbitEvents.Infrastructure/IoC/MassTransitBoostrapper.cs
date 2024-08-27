@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Application.Events.Handlers.Authors;
+﻿using RabbitEvents.Application.EventHandlers.Authors;
 using RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Authors;
 
 namespace RabbitEvents.Infrastructure.IoC;

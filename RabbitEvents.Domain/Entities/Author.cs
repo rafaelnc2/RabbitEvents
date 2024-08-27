@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Domain.Events.AutorEvents;
+﻿using RabbitEvents.Domain.DomainEvents.AuthorEvents;
 using Redis.OM.Modeling;
 using System.Text.Json.Serialization;
 

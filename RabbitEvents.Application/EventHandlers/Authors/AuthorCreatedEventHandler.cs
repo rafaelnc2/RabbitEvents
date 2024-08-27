@@ -1,7 +1,7 @@
-﻿using RabbitEvents.Domain.Events.AutorEvents;
+﻿using RabbitEvents.Domain.DomainEvents.AuthorEvents;
 using RabbitEvents.Shared.Models.Messaging;
 
-namespace RabbitEvents.Application.Events.Handlers.Authors;
+namespace RabbitEvents.Application.EventHandlers.Authors;
 
 public sealed class AuthorCreatedEventHandler : IConsumer<AuthorCreatedEvent>
 {

@@ -1,6 +1,6 @@
 ﻿using RabbitEvents.Domain.Interfaces.Events;
 
-namespace RabbitEvents.Domain.Events.AutorEvents;
+namespace RabbitEvents.Domain.DomainEvents.AuthorEvents;
 
 public class AuthorCreatedEvent : IDomainEvent
 {

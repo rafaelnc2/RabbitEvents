@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using RabbitEvents.Domain.Interfaces.Events;
+using RabbitEvents.Application.Interfaces.Events;
 
 namespace RabbitEvents.Application.Services;
 
