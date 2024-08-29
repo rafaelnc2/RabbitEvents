@@ -1,5 +1,4 @@
-﻿using OpenAI.Images;
-using RabbitEvents.Application.Interfaces;
+﻿using RabbitEvents.Application.Interfaces;
 using RabbitEvents.Shared.Constants;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
@@ -46,23 +45,11 @@ public sealed class ImageCreateConsumer : BackgroundService
 
         try
         {
-            var imageCreatorClient = new ImageClient("dall-e-3", _apiKey);
+            // Integrar com API para criação de imagem
 
-            var imageRequest = new ImageGenerationOptions()
-            {
-                Quality = GeneratedImageQuality.High,
-                Size = GeneratedImageSize.W1024xH1792,
-                Style = GeneratedImageStyle.Natural,
-                ResponseFormat = GeneratedImageFormat.Uri
-            };
+            //string templateToCreateImage = $"I want an image of {authorImageCreateDto.AuthorName} as a cartoon, very smiling, reading a book and drinking a cup of coffee";
 
-            string templateToCreateImage = $"I want an image of {authorImageCreateDto.AuthorName} as a cartoon, very smiling, reading a book and drinking a cup of coffee";
-
-            var response = await imageCreatorClient.GenerateImageAsync(templateToCreateImage, imageRequest);
-
-            _logger.LogInformation("############### Created Image #########################################");
-            _logger.LogInformation(response.Value.ImageUri.ToString());
-            _logger.LogInformation("############### Created Image #########################################");
+            //_logger.LogInformation("############### Created Image #########################################");
         }
         catch (Exception ex)
         {
