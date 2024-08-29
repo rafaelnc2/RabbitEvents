@@ -90,13 +90,13 @@ public sealed class AuthorService : IAuthorDomainService
         return response.OkResponse(autorResponse);
     }
 
-    public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync()
+    public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync(string? nameFilter)
     {
         _logger.LogInformation("Obter todos os Autores");
 
         var response = new ApiResponse<IEnumerable<AuthorResponse>>();
 
-        var autores = await _autorRedisRepository.ObterTodosAsync();
+        var autores = await _autorRedisRepository.ObterTodosAsync(nameFilter);
 
         var result = autores.Select(aut => AuthorMap.ToAutorResponse(aut));
 

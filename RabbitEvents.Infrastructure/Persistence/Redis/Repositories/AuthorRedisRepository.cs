@@ -57,8 +57,13 @@ public class AuthorRedisRepository
     public async Task<Author?> ObterPorIdAsync(string autorId) =>
         await _autorCollection.FindByIdAsync(autorId);
 
-    public async Task<IEnumerable<Author>> ObterTodosAsync() =>
-        await _autorCollection.ToListAsync();
+    public async Task<IEnumerable<Author>> ObterTodosAsync(string? filterName)
+    {
+        if (string.IsNullOrWhiteSpace(filterName) is true)
+            return await _autorCollection.ToListAsync();
+
+        return await _autorCollection.Where(author => author.Nome.Contains(filterName)).ToListAsync();
+    }
 
 
     private Task SetImageToCacheTask(Guid autorId, byte[]? imageInBytes)

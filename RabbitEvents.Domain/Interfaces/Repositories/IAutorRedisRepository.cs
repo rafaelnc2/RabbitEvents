@@ -8,5 +8,5 @@ public interface IAutorRedisRepository
 
     Task<Author?> ObterPorIdAsync(string autorId);
 
-    Task<IEnumerable<Author>> ObterTodosAsync();
+    Task<IEnumerable<Author>> ObterTodosAsync(string? filterName);
 }
