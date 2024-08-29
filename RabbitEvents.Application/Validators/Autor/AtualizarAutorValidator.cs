@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RabbitEvents.Shared.Inputs.Autor;
+using RabbitEvents.Shared.Inputs.Authors;
 
 namespace RabbitEvents.Application.Validators.Autor;
 

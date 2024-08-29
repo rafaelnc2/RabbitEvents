@@ -1,20 +1,20 @@
-﻿using RabbitEvents.Domain.Events.AutorEvents;
+﻿using RabbitEvents.Domain.DomainEvents.AuthorEvents;
 using RabbitEvents.Shared.Models.Messaging;
 
-namespace RabbitEvents.Application.Events.Handlers.Autor;
+namespace RabbitEvents.Application.EventHandlers.Authors;
 
-public sealed class AutorCriadoEventHandler : IConsumer<AutorCriadoEvent>
+public sealed class AuthorCreatedEventHandler : IConsumer<AuthorCreatedEvent>
 {
-    private readonly ILogger<AutorCriadoEventHandler> _logger;
+    private readonly ILogger<AuthorCreatedEventHandler> _logger;
     private readonly IQueueService _queueService;
 
-    public AutorCriadoEventHandler(ILogger<AutorCriadoEventHandler> logger, IQueueService queueService)
+    public AuthorCreatedEventHandler(ILogger<AuthorCreatedEventHandler> logger, IQueueService queueService)
     {
         _logger = logger;
         _queueService = queueService;
     }
 
-    public async Task Consume(ConsumeContext<AutorCriadoEvent> context)
+    public async Task Consume(ConsumeContext<AuthorCreatedEvent> context)
     {
         _logger.LogInformation("Event handler AutorCriado");
 

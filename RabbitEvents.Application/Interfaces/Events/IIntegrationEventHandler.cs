@@ -1,4 +1,4 @@
-﻿namespace RabbitEvents.Domain.Interfaces.Events;
+﻿namespace RabbitEvents.Application.Interfaces.Events;
 
 public interface IIntegrationEventHandler<in TEvent> where TEvent : IIntegrationEvent
 {

@@ -1,104 +1,104 @@
 ﻿using RabbitEvents.Domain.IntegrationEvents.AutorEvents;
 using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
-using RabbitEvents.Shared.Inputs.Autor;
+using RabbitEvents.Shared.Inputs.Authors;
 using RabbitEvents.Shared.Responses.Autor;
 
 namespace RabbitEvents.Application.Services;
 
-public sealed class AuthorService(
-    ILogger<AuthorService> Logger,
-    IAutorRedisRepository AutorRedisRepository,
-    ICacheService CacheService,
-    IBus Bus) : IAuthorDomainService
+public sealed class AuthorService : IAuthorDomainService
 {
+    private readonly ILogger<AuthorService> _logger;
+    private readonly IAutorRedisRepository _autorRedisRepository;
+    private readonly ImageService _imageService;
+
+    public AuthorService(ILogger<AuthorService> logger, IAutorRedisRepository autorRedisRepository, ImageService imageService)
+    {
+        _logger = logger;
+        _autorRedisRepository = autorRedisRepository;
+        _imageService = imageService;
+    }
+
     public async Task<ApiResponse<CreateAuthorResponse>> CriarAsync(CreateAuthorInput criarInput)
     {
-        Logger.LogInformation("Criando novo Autor");
+        _logger.LogInformation("Criando novo Autor");
 
         var response = new ApiResponse<CreateAuthorResponse>();
 
-        var autor = Author.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
+        var author = Author.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
 
-        var result = await AutorRedisRepository.CriarAsync(autor);
+        var result = await _autorRedisRepository.CriarAsync(author);
 
-        //Criar service para imagens
         if (criarInput.Imagem is not null)
         {
-            var fileExtension = criarInput.Imagem.GetFileExtension();
+            var authorWithImageCreatedEvent = new AuthorWithImageCreatedEvent(author.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
+            var authorWithoutImageCreatedEvent = new AuthorWithoutImageCreatedEvent(author.Id, author.Nome);
 
-            await CacheService.SetValueAsync(
-                $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}{CacheKeysConstants.KEY_SEPARATOR}{autor.Id}",
-                criarInput.Imagem.GetByteArray()!,
-                CacheKeysConstants.DEFAULT_EXPIRES
-            )!;
-
-            var autorComImagemCriadoEvent = new AuthorWithImageCreatedEvent(autor.Id, fileExtension, criarInput.Imagem.ContentType);
-
-            await Bus.Publish((object)autorComImagemCriadoEvent);
-        }
-        else
-        {
-            var authorWithoutImageCreatedEvent = new AuthorWithoutImageCreatedEvent(autor.Id, autor.Nome);
-
-            await Bus.Publish((object)authorWithoutImageCreatedEvent);
+            await _imageService.SaveImageService(criarInput.Imagem, CacheKeysConstants.AUTHOR_IMAGE_KEY, author.Id, author.Nome,
+                authorWithImageCreatedEvent, authorWithoutImageCreatedEvent);
         }
 
-        var autorResponse = AutorMap.ToCriarAutorResponse(result);
+        var autorResponse = AuthorMap.ToCriarAutorResponse(result);
 
-        Logger.LogInformation("Autor criado com sucesso");
+        _logger.LogInformation("Autor criado com sucesso");
 
         return response.CreatedResponse(autorResponse);
     }
 
     public async Task<ApiResponse<AuthorResponse>> AtualizarAsync(UpdateAuthorInput atualizarInput)
     {
-        Logger.LogInformation($"Atualizando Autor ID: {atualizarInput.Id}");
+        _logger.LogInformation($"Atualizando Autor ID: {atualizarInput.Id}");
 
         var response = new ApiResponse<AuthorResponse>();
 
-        var autor = await AutorRedisRepository.ObterPorIdAsync(atualizarInput.Id!);
+        var author = await _autorRedisRepository.ObterPorIdAsync(atualizarInput.Id!);
 
-        if (autor is null)
+        if (author is null)
             return response.NotFoundResponse();
 
-        autor.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia, atualizarInput.Imagem?.GetFileExtension());
+        author.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia, atualizarInput.Genero);
 
-        await AutorRedisRepository.AtualizarAsync(autor, atualizarInput.Imagem?.GetByteArray());
+        await _autorRedisRepository.AtualizarAsync(author);
 
-        var autorResponse = AutorMap.ToAutorResponse(autor);
+        if (atualizarInput.Imagem is not null)
+        {
+            var authorWithImageUpdatedEvent = new AuthorWithImageCreatedEvent(author.Id, atualizarInput.Imagem.GetFileExtension(), atualizarInput.Imagem.ContentType);
+            await _imageService.SaveImageService(atualizarInput.Imagem, CacheKeysConstants.AUTHOR_IMAGE_KEY, author.Id, author.Nome, authorWithImageUpdatedEvent);
+        }
 
-        Logger.LogInformation("Autor atualizado com sucesso");
+        var autorResponse = AuthorMap.ToAutorResponse(author);
+
+        _logger.LogInformation("Autor atualizado com sucesso");
 
         return response.OkResponse(autorResponse);
     }
 
     public async Task<ApiResponse<AuthorResponse>> ObterPorIdAsync(GetAuthorByIdInput obterAutorPorIdInput)
     {
-        Logger.LogInformation($"Obter Autor por ID: {obterAutorPorIdInput.Id}");
+        _logger.LogInformation($"Obter Autor por ID: {obterAutorPorIdInput.Id}");
 
         var response = new ApiResponse<AuthorResponse>();
 
-        var autor = await AutorRedisRepository.ObterPorIdAsync(obterAutorPorIdInput.Id);
+        var autor = await _autorRedisRepository.ObterPorIdAsync(obterAutorPorIdInput.Id);
 
         if (autor is null)
             return response.NotFoundResponse();
 
-        var autorResponse = AutorMap.ToAutorResponse(autor);
+        var autorResponse = AuthorMap.ToAutorResponse(autor);
 
-        Logger.LogInformation($"Autor ID: {obterAutorPorIdInput.Id} encontrado com sucesso");
+        _logger.LogInformation($"Autor ID: {obterAutorPorIdInput.Id} encontrado com sucesso");
 
         return response.OkResponse(autorResponse);
     }
 
     public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync()
     {
-        Logger.LogInformation("Obter todos os Autores");
+        _logger.LogInformation("Obter todos os Autores");
 
         var response = new ApiResponse<IEnumerable<AuthorResponse>>();
 
-        var autores = await AutorRedisRepository.ObterTodosAsync();
+        var autores = await _autorRedisRepository.ObterTodosAsync();
 
-        var result = autores.Select(aut => AutorMap.ToAutorResponse(aut));
+        var result = autores.Select(aut => AuthorMap.ToAutorResponse(aut));
 
         return response.OkResponse(result);
     }

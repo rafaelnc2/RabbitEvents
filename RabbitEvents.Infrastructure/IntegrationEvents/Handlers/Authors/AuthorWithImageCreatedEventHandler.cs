@@ -1,6 +1,6 @@
 ﻿using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
 
-namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.AutorHandlers;
+namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Authors;
 
 public sealed class AuthorWithImageCreatedEventHandler(
     ILogger<AuthorWithImageCreatedEventHandler> Logger,

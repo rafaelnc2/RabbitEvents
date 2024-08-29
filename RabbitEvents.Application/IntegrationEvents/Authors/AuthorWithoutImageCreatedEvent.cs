@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Domain.Interfaces.Events;
+﻿using RabbitEvents.Application.Interfaces.Events;
 
 namespace RabbitEvents.Domain.IntegrationEvents.AutorEvents;
 

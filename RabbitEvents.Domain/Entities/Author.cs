@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Domain.Events.AutorEvents;
+﻿using RabbitEvents.Domain.DomainEvents.AuthorEvents;
 using Redis.OM.Modeling;
 using System.Text.Json.Serialization;
 
@@ -57,24 +57,21 @@ public sealed class Author : Entity
             dataAtualizacao: null
         );
 
-        Raise(new AutorCriadoEvent(autor.Id));
+        Raise(new AuthorCreatedEvent(autor.Id));
 
         return autor;
     }
 
-    public void Update(string nome, string sobre, string biografia, string? extension)
+    public void Update(string nome, string sobre, string biografia, string genero)
     {
         Nome = nome.Trim();
         Sobre = sobre.Trim();
         Biografia = biografia.Trim();
-
-        var imageName = string.IsNullOrEmpty(extension) ? string.Empty : $"{Id}.{extension}";
-
-        Imagem = imageName;
+        Genero = genero.Trim();
 
         DataAtualizacao = DateTime.Now;
 
-        Raise(new AutorAtualizadoEvent(Id, imageName));
+        Raise(new AuthorUpdatedEvent(Id));
     }
 
 

@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Shared.Inputs.Autor;
+﻿using RabbitEvents.Shared.Inputs.Authors;
 using RabbitEvents.Shared.Responses.Autor;
 
 namespace RabbitEvents.Domain.Interfaces.DomainServices;
