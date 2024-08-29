@@ -8,14 +8,13 @@ namespace RabbitEvents.Domain.Entities;
 public sealed class Author : Entity
 {
     [JsonConstructor]
-    private Author(Guid id, string nome, string sobre, string biografia, string genero, string? imagem, DateTime dataCriacao, DateTime? dataAtualizacao)
+    private Author(Guid id, string nome, string sobre, string biografia, string? imagem, DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = id;
 
         Nome = nome;
         Sobre = sobre;
         Biografia = biografia;
-        Genero = genero;
         Imagem = imagem;
 
         DataCriacao = dataCriacao;
@@ -31,16 +30,13 @@ public sealed class Author : Entity
     [Searchable]
     public string Biografia { get; private set; }
 
-    [Indexed]
-    public string Genero { get; private set; }
-
     public string? Imagem { get; private set; }
 
     [JsonIgnore]
     public List<Livro>? Livros { get; private set; }
 
 
-    public static Author Create(string nome, string sobre, string biografia, string genero)
+    public static Author Create(string nome, string sobre, string biografia)
     {
         var newId = Guid.NewGuid();
 
@@ -50,7 +46,6 @@ public sealed class Author : Entity
             nome: nome.Trim(),
             sobre: sobre.Trim(),
             biografia: biografia.Trim(),
-            genero: genero,
             imagem: null,
 
             dataCriacao: DateTime.Now,
@@ -62,12 +57,11 @@ public sealed class Author : Entity
         return autor;
     }
 
-    public void Update(string nome, string sobre, string biografia, string genero)
+    public void Update(string nome, string sobre, string biografia)
     {
         Nome = nome.Trim();
         Sobre = sobre.Trim();
         Biografia = biografia.Trim();
-        Genero = genero.Trim();
 
         DataAtualizacao = DateTime.Now;
 
