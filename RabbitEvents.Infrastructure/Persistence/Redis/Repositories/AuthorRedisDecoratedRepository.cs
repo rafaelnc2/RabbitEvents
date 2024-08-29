@@ -32,8 +32,8 @@ internal class AuthorRedisDecoratedRepository : IAutorRedisRepository
     public Task<Author?> ObterPorIdAsync(string autorId) =>
         _autorRedisRepository.ObterPorIdAsync(autorId);
 
-    public Task<IEnumerable<Author>> ObterTodosAsync() =>
-        _autorRedisRepository.ObterTodosAsync();
+    public Task<IEnumerable<Author>> ObterTodosAsync(string? nameFilter) =>
+        _autorRedisRepository.ObterTodosAsync(nameFilter);
 
 
     private async ValueTask PublishEventsAsync(Entity entity)

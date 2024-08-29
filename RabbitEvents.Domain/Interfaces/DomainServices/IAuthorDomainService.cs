@@ -11,5 +11,5 @@ public interface IAuthorDomainService
 
     Task<ApiResponse<AuthorResponse>> ObterPorIdAsync(GetAuthorByIdInput obterAutorPorIdInput);
 
-    Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync();
+    Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync(string? nameFilter);
 }

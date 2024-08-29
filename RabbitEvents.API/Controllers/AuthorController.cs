@@ -42,9 +42,9 @@ public class AuthorController : ApiBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> ObterTodosAsync()
+    public async Task<IActionResult> ObterTodosAsync([FromQuery] string? nome)
     {
-        var response = await _autorService.ObterTodosAsync();
+        var response = await _autorService.ObterTodosAsync(nome);
 
         return ApiResult<IEnumerable<AuthorResponse>>(response);
     }

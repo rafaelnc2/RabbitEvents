@@ -24,7 +24,7 @@ public sealed class AuthorService : IAuthorDomainService
 
         var response = new ApiResponse<CreateAuthorResponse>();
 
-        var author = Author.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia, criarInput.Genero);
+        var author = Author.Create(criarInput.Nome, criarInput.Sobre, criarInput.Biografia);
 
         var result = await _autorRedisRepository.CriarAsync(author);
 
@@ -55,7 +55,7 @@ public sealed class AuthorService : IAuthorDomainService
         if (author is null)
             return response.NotFoundResponse();
 
-        author.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia, atualizarInput.Genero);
+        author.Update(atualizarInput.Nome, atualizarInput.Sobre, atualizarInput.Biografia);
 
         await _autorRedisRepository.AtualizarAsync(author);
 
@@ -90,13 +90,13 @@ public sealed class AuthorService : IAuthorDomainService
         return response.OkResponse(autorResponse);
     }
 
-    public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync()
+    public async Task<ApiResponse<IEnumerable<AuthorResponse>>> ObterTodosAsync(string? nameFilter)
     {
         _logger.LogInformation("Obter todos os Autores");
 
         var response = new ApiResponse<IEnumerable<AuthorResponse>>();
 
-        var autores = await _autorRedisRepository.ObterTodosAsync();
+        var autores = await _autorRedisRepository.ObterTodosAsync(nameFilter);
 
         var result = autores.Select(aut => AuthorMap.ToAutorResponse(aut));
 
