@@ -12,5 +12,6 @@ internal class ServicesBootstrapper
         services.AddScoped<ImageService>();
 
         services.AddScoped<IAuthorDomainService, AuthorService>();
+        services.AddScoped<IBookDomainService, BookService>();
     }
 }

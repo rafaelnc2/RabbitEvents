@@ -1,4 +1,4 @@
-﻿using RabbitEvents.Shared.Responses.Autor;
+﻿using RabbitEvents.Shared.Responses.Authors;
 
 namespace RabbitEvents.Application.Mappings;
 

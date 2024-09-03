@@ -3,9 +3,9 @@ using RabbitEvents.Shared.Inputs.Authors;
 
 namespace RabbitEvents.Application.Validators.Autor;
 
-public class ObterAutorPorIdValidator : AbstractValidator<GetAuthorByIdInput>
+public class GetAuthorByIdValidator : AbstractValidator<GetAuthorByIdInput>
 {
-    public ObterAutorPorIdValidator()
+    public GetAuthorByIdValidator()
     {
         RuleFor(x => x.Id)
             .NotEmpty()
