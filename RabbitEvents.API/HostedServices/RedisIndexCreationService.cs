@@ -33,6 +33,7 @@ public class RedisIndexCreationService : BackgroundService
     private IEnumerable<Type> ListIndexesToCreate() =>
         new List<Type>()
         {
-            typeof(Author)
+            typeof(Author),
+            typeof(Book)
         };
 }

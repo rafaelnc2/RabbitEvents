@@ -17,7 +17,7 @@ public class BookController : ApiBaseController
 
     [HttpPost]
     [TypeFilter(typeof(ValidatorFilter<CreateBookInput, CreateBookValidator>))]
-    public async Task<IActionResult> CriarAsync([FromBody] CreateBookInput createBookInput)
+    public async Task<IActionResult> CriarAsync([FromForm] CreateBookInput createBookInput)
     {
         var response = await _bookService.CriarAsync(createBookInput);
 

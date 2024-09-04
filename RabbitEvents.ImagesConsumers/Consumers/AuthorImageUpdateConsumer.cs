@@ -17,7 +17,7 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
     private readonly IQueueService _queueService;
     private readonly IServiceProvider _serviceProvider;
 
-    private IAutorRedisRepository? _autorRedisRepository;
+    private IAuthorRedisRepository? _autorRedisRepository;
 
     public AuthorImageUpdateConsumer(ILogger<AuthorImageUpdateConsumer> logger, IQueueService queueService, IServiceProvider serviceProvider)
     {
@@ -90,7 +90,7 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
     {
         using var scope = _serviceProvider.CreateScope();
 
-        _autorRedisRepository = scope.ServiceProvider.GetRequiredService<IAutorRedisRepository>();
+        _autorRedisRepository = scope.ServiceProvider.GetRequiredService<IAuthorRedisRepository>();
     }
 
 }

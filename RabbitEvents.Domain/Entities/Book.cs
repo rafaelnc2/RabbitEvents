@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using RabbitEvents.Domain.DomainEvents.BookEvents;
+using Redis.OM.Modeling;
+using System.Text.Json.Serialization;
 
 namespace RabbitEvents.Domain.Entities;
 
+[Document(StorageType = StorageType.Json, Prefixes = ["Book"])]
 public sealed class Book : Entity
 {
+    [JsonConstructor]
     private Book(Guid id, Guid authorId, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco,
         DateTime dataCriacao, DateTime? dataAtualizacao)
     {
@@ -22,15 +26,32 @@ public sealed class Book : Entity
     }
 
     public Guid AuthorId { get; private set; }
+
+    [Searchable]
     public string Titulo { get; private set; }
+
+    [Searchable]
     public string Prefacio { get; private set; }
+
+    [Searchable]
     public string Edicao { get; private set; }
+
+    [Searchable]
     public int AnoPublicacao { get; set; }
+
+    [Searchable]
     public string Editora { get; private set; }
+
+    [Indexed]
     public string GeneroLiterario { get; private set; }
+
+    [Searchable]
     public double Preco { get; private set; }
 
-    [NotMapped]
+    public string? Imagem { get; private set; }
+
+
+    [JsonIgnore]
     public Author Author { get; private set; }
 
     public static Book Create(Author author, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco)
@@ -51,6 +72,8 @@ public sealed class Book : Entity
 
         livro.Author = author;
 
+        Raise(new BookCreatedEvent(livro.Id));
+
         return livro;
     }
 
@@ -64,6 +87,13 @@ public sealed class Book : Entity
         Editora = editora;
         GeneroLiterario = generoLiterario;
         Preco = preco;
+        DataAtualizacao = DateTime.Now;
+    }
+
+    public void UpdateImageName(string imageName)
+    {
+        Imagem = imageName;
+
         DataAtualizacao = DateTime.Now;
     }
 }

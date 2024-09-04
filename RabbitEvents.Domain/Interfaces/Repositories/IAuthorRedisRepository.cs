@@ -1,6 +1,6 @@
 ﻿namespace RabbitEvents.Domain.Interfaces.Repositories;
 
-public interface IAutorRedisRepository
+public interface IAuthorRedisRepository
 {
     Task<Author> CriarAsync(Author autor);
 
