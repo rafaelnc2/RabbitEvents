@@ -1,4 +1,5 @@
 ﻿using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
+using RabbitEvents.Shared.Configurations;
 
 namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Authors;
 

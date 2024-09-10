@@ -3,6 +3,7 @@ using RabbitEvents.Application.Validators;
 using RabbitEvents.Domain.Entities;
 using RabbitEvents.Domain.Interfaces.Repositories;
 using RabbitEvents.ImagesConsumers.Helpers;
+using RabbitEvents.Shared.Configurations;
 using RabbitEvents.Shared.Constants;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;

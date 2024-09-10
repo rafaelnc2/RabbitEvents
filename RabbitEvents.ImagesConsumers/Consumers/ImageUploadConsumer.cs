@@ -1,5 +1,6 @@
 ﻿using RabbitEvents.Application.Interfaces;
 using RabbitEvents.ImagesConsumers.Helpers;
+using RabbitEvents.Shared.Configurations;
 using RabbitEvents.Shared.Constants;
 using RabbitEvents.Shared.Models.Messaging;
 using SixLabors.ImageSharp;
