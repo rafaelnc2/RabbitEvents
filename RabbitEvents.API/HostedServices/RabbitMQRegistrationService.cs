@@ -1,6 +1,6 @@
 ﻿
 using RabbitEvents.Application.Interfaces;
-using RabbitEvents.Shared.Constants;
+using RabbitEvents.Shared.Configurations;
 
 namespace RabbitEvents.API.HostedServices;
 
@@ -19,6 +19,11 @@ public class RabbitMQRegistrationService : BackgroundService
         _queueService.CreateTopic(QueueDefinitions.AUTHORS_QUEUE, QueueDefinitions.AUTHORS_EXCHANGE);
 
         _queueService.CreateTopic(QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE, QueueDefinitions.AUTHORS_EXCHANGE);
+
+
+        _queueService.CreateTopic(QueueDefinitions.BOOKS_QUEUE, QueueDefinitions.BOOKS_EXCHANGE);
+
+        _queueService.CreateTopic(QueueDefinitions.BOOKS_IMAGE_UPDATE_QUEUE, QueueDefinitions.BOOKS_EXCHANGE);
 
 
         _queueService.CreateDeadLetterQueue(QueueDefinitions.IMAGES_DLQ_QUEUE, QueueDefinitions.IMAGES_DLQ_EXCHANGE);

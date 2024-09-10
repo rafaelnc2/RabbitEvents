@@ -1,4 +1,5 @@
-﻿using RabbitEvents.Shared.Inputs.Books;
+﻿using RabbitEvents.Application.IntegrationEvents.Books;
+using RabbitEvents.Shared.Inputs.Books;
 using RabbitEvents.Shared.Responses.Books;
 
 namespace RabbitEvents.Application.Services;
@@ -8,12 +9,14 @@ public sealed class BookService : IBookDomainService
     private readonly ILogger<BookService> _logger;
     private readonly IAuthorRedisRepository _autorRedisRepository;
     private readonly IBookRedisRepository _bookRedisRepository;
+    private readonly ImageService _imageService;
 
-    public BookService(ILogger<BookService> logger, IAuthorRedisRepository autorRedisRepository, IBookRedisRepository bookRedisRepository)
+    public BookService(ILogger<BookService> logger, IAuthorRedisRepository autorRedisRepository, IBookRedisRepository bookRedisRepository, ImageService imageService)
     {
         _logger = logger;
         _autorRedisRepository = autorRedisRepository;
         _bookRedisRepository = bookRedisRepository;
+        _imageService = imageService;
     }
 
     public async Task<ApiResponse<CreateBookResponse>> CriarAsync(CreateBookInput criarInput)
@@ -36,11 +39,11 @@ public sealed class BookService : IBookDomainService
         {
             _logger.LogInformation("Criar livro com imagem");
 
-            //var authorWithImageCreatedEvent = new AuthorWithImageCreatedEvent(author.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
-            //var authorWithoutImageCreatedEvent = new AuthorWithoutImageCreatedEvent(author.Id, author.Nome);
+            var bookWithImageCreatedEvent = new BookWithImageCreatedEvent(book.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
+            var bookWithoutImageCreatedEvent = new BookWithoutImageCreatedEvent(book.Id, book.Titulo);
 
-            //await _imageService.SaveImageService(criarInput.Imagem, CacheKeysConstants.AUTHOR_IMAGE_KEY, author.Id, author.Nome,
-            //    authorWithImageCreatedEvent, authorWithoutImageCreatedEvent);
+            await _imageService.SaveImageService(criarInput.Imagem, CacheKeysConstants.BOOK_IMAGE_KEY, book.Id, book.Titulo,
+                bookWithImageCreatedEvent, bookWithoutImageCreatedEvent);
         }
 
         var bookResponse = BookMap.ToCreateBookRespponse(book);
