@@ -1,25 +1,15 @@
 ﻿using RabbitEvents.Shared.Models.Messaging;
 
-namespace RabbitEvents.Shared.Constants;
+namespace RabbitEvents.Shared.Configurations;
 
-public static class QueueDefinitions
+public static partial class QueueDefinitions
 {
     public static int MAX_RETY_COUNT = 5;
 
     // EXCHANGE DECLARE
-    public static Exchange AUTHORS_EXCHANGE = new("authors_exchange", "topic");
-
-    public static Exchange AUTHOR_DLQ_EXCHANGE = new("author_dlq_exchange", "direct");
-
     public static Exchange IMAGES_EXCHANGE = new("images_exchange", "topic");
 
     public static Exchange IMAGES_DLQ_EXCHANGE = new("image_dlq_exchange", "direct");
-
-    // AUTHOR QUEUE DECLARE
-    public static Queue AUTHORS_QUEUE = new("authors", "authors");
-
-
-    // IMAGE QUEUE DECLARE
 
     //DEAD LETTER DECLARE
     public static Queue IMAGES_DLQ_QUEUE = new("images_dlq", "#");
@@ -28,8 +18,6 @@ public static class QueueDefinitions
     {
         { "x-dead-letter-exchange", IMAGES_DLQ_EXCHANGE!.Name }
     };
-
-    public static Queue AUTHORS_IMAGE_UPDATE_QUEUE = new("authors_image_update", "authors.image.update");
 
     public static Queue IMAGES_UPLOAD_QUEUE = new("images_upload", "images.upload", DeadLetterImageQueueArguments);
 
