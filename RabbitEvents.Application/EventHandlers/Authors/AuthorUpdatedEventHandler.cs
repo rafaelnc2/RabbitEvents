@@ -1,4 +1,5 @@
 ﻿using RabbitEvents.Domain.DomainEvents.AuthorEvents;
+using RabbitEvents.Shared.Configurations;
 using RabbitEvents.Shared.Models.Messaging;
 
 namespace RabbitEvents.Application.EventHandlers.Authors;
