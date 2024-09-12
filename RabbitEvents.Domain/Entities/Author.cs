@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RabbitEvents.Domain.Entities;
 
-[Document(StorageType = StorageType.Json, Prefixes = ["Author"])]
+[Document(StorageType = StorageType.Json, Prefixes = ["Authors"])]
 public sealed class Author : Entity
 {
     [JsonConstructor]
@@ -33,7 +33,7 @@ public sealed class Author : Entity
     public string? Imagem { get; private set; }
 
     [JsonIgnore]
-    public List<Livro>? Livros { get; private set; }
+    public List<Book>? Livros { get; private set; }
 
 
     public static Author Create(string nome, string sobre, string biografia)

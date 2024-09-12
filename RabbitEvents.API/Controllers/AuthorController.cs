@@ -1,6 +1,6 @@
 ﻿using RabbitEvents.Application.Validators.Autor;
 using RabbitEvents.Shared.Inputs.Authors;
-using RabbitEvents.Shared.Responses.Autor;
+using RabbitEvents.Shared.Responses.Authors;
 
 namespace RabbitEvents.API.Controllers;
 
@@ -15,7 +15,7 @@ public class AuthorController : ApiBaseController
     }
 
     [HttpPost]
-    [TypeFilter(typeof(ValidatorFilter<CreateAuthorInput, CriarAutorValidator>))]
+    [TypeFilter(typeof(ValidatorFilter<CreateAuthorInput, CreateAuthorValidator>))]
     public async Task<IActionResult> CriarAsync([FromForm] CreateAuthorInput criarAutorInput)
     {
         var response = await _autorService.CriarAsync(criarAutorInput);
@@ -24,7 +24,7 @@ public class AuthorController : ApiBaseController
     }
 
     [HttpPut("{id}")]
-    [TypeFilter(typeof(ValidatorFilter<UpdateAuthorInput, AtualizarAutorValidator>))]
+    [TypeFilter(typeof(ValidatorFilter<UpdateAuthorInput, UpdateAuthorValidator>))]
     public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromForm] UpdateAuthorInput atualizarAutorInput)
     {
         var response = await _autorService.AtualizarAsync(atualizarAutorInput);
@@ -33,7 +33,7 @@ public class AuthorController : ApiBaseController
     }
 
     [HttpGet("{Id}")]
-    [TypeFilter(typeof(ValidatorFilter<GetAuthorByIdInput, ObterAutorPorIdValidator>))]
+    [TypeFilter(typeof(ValidatorFilter<GetAuthorByIdInput, GetAuthorByIdValidator>))]
     public async Task<IActionResult> ObterPorIdAsync([FromRoute] GetAuthorByIdInput obterAutorPorIdInput)
     {
         var response = await _autorService.ObterPorIdAsync(obterAutorPorIdInput);

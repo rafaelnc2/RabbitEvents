@@ -1,17 +1,17 @@
 ﻿using RabbitEvents.Domain.IntegrationEvents.AutorEvents;
 using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
 using RabbitEvents.Shared.Inputs.Authors;
-using RabbitEvents.Shared.Responses.Autor;
+using RabbitEvents.Shared.Responses.Authors;
 
 namespace RabbitEvents.Application.Services;
 
 public sealed class AuthorService : IAuthorDomainService
 {
     private readonly ILogger<AuthorService> _logger;
-    private readonly IAutorRedisRepository _autorRedisRepository;
+    private readonly IAuthorRedisRepository _autorRedisRepository;
     private readonly ImageService _imageService;
 
-    public AuthorService(ILogger<AuthorService> logger, IAutorRedisRepository autorRedisRepository, ImageService imageService)
+    public AuthorService(ILogger<AuthorService> logger, IAuthorRedisRepository autorRedisRepository, ImageService imageService)
     {
         _logger = logger;
         _autorRedisRepository = autorRedisRepository;

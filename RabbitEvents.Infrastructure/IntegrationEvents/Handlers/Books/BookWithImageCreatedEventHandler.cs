@@ -1,26 +1,26 @@
-﻿using RabbitEvents.Infrastructure.IntegrationEvents.Events.AutorEvents;
+﻿using RabbitEvents.Application.IntegrationEvents.Books;
 using RabbitEvents.Shared.Configurations;
 
-namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Authors;
+namespace RabbitEvents.Infrastructure.IntegrationEvents.Handlers.Books;
 
-public sealed class AuthorWithImageCreatedEventHandler(
-    ILogger<AuthorWithImageCreatedEventHandler> Logger,
+public sealed class BookWithImageCreatedEventHandler(
+    ILogger<BookWithImageCreatedEventHandler> Logger,
     ICacheService CacheService,
     IQueueService QueueService
-) : IConsumer<AuthorWithImageCreatedEvent>
+) : IConsumer<BookWithImageCreatedEvent>
 {
-    public async Task Consume(ConsumeContext<AuthorWithImageCreatedEvent> context)
+    public async Task Consume(ConsumeContext<BookWithImageCreatedEvent> context)
     {
-        Logger.LogInformation("Event handler AuthorWithImageCreatedEventHandler");
+        Logger.LogInformation("Event handler BookWithImageCreatedEventHandler");
 
-        var authorIdCacheKey = $"{CacheKeysConstants.AUTHOR_IMAGE_KEY}:{context.Message.AuthorId}";
+        var bookIdCacheKey = $"{CacheKeysConstants.BOOK_IMAGE_KEY}:{context.Message.BookId}";
 
-        var keyExists = await CacheService.KeyExistsAsync(authorIdCacheKey);
+        var keyExists = await CacheService.KeyExistsAsync(bookIdCacheKey);
 
         if (keyExists)
         {
             var messageBody = new ImageMessageBodyDto(
-                ImageId: authorIdCacheKey,
+                ImageId: bookIdCacheKey,
                 FileExtension: context.Message.FileExtension,
                 ContentType: context.Message.ContentType
             );
@@ -39,7 +39,7 @@ public sealed class AuthorWithImageCreatedEventHandler(
             Queue: QueueDefinitions.IMAGES_CREATE_QUEUE,
             Exchange: QueueDefinitions.IMAGES_EXCHANGE,
             RoutingKey: QueueDefinitions.IMAGES_CREATE_QUEUE.RoutingKey,
-            MessageBody: authorIdCacheKey
+            MessageBody: bookIdCacheKey
         ));
     }
 }

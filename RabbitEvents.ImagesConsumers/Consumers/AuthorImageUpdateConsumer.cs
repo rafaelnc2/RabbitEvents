@@ -3,6 +3,7 @@ using RabbitEvents.Application.Validators;
 using RabbitEvents.Domain.Entities;
 using RabbitEvents.Domain.Interfaces.Repositories;
 using RabbitEvents.ImagesConsumers.Helpers;
+using RabbitEvents.Shared.Configurations;
 using RabbitEvents.Shared.Constants;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
@@ -17,7 +18,7 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
     private readonly IQueueService _queueService;
     private readonly IServiceProvider _serviceProvider;
 
-    private IAutorRedisRepository? _autorRedisRepository;
+    private IAuthorRedisRepository? _autorRedisRepository;
 
     public AuthorImageUpdateConsumer(ILogger<AuthorImageUpdateConsumer> logger, IQueueService queueService, IServiceProvider serviceProvider)
     {
@@ -90,7 +91,7 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
     {
         using var scope = _serviceProvider.CreateScope();
 
-        _autorRedisRepository = scope.ServiceProvider.GetRequiredService<IAutorRedisRepository>();
+        _autorRedisRepository = scope.ServiceProvider.GetRequiredService<IAuthorRedisRepository>();
     }
 
 }

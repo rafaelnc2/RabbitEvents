@@ -1,5 +1,5 @@
 ﻿using RabbitEvents.Shared.Inputs.Authors;
-using RabbitEvents.Shared.Responses.Autor;
+using RabbitEvents.Shared.Responses.Authors;
 
 namespace RabbitEvents.Domain.Interfaces.DomainServices;
 

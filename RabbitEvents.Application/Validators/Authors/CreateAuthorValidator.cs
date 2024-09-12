@@ -1,18 +1,13 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
 using RabbitEvents.Shared.Inputs.Authors;
 
 namespace RabbitEvents.Application.Validators.Autor;
 
-public class AtualizarAutorValidator : AbstractValidator<UpdateAuthorInput>
+public class CreateAuthorValidator : AbstractValidator<CreateAuthorInput>, FluentValidation.IValidator
 {
-    public AtualizarAutorValidator()
+    public CreateAuthorValidator()
     {
-        RuleFor(x => x.Id)
-            .NotNull()
-            .NotEmpty()
-            .Must(GuidValidator.Validate)
-            .WithMessage("ID informado é inválido");
-
         RuleFor(x => x.Nome)
             .NotEmpty()
             .MinimumLength(3)
@@ -20,13 +15,13 @@ public class AtualizarAutorValidator : AbstractValidator<UpdateAuthorInput>
             .WithMessage("Informe um Nome válido!");
 
         RuleFor(x => x.Sobre)
-            .MaximumLength(1000)
+            .MaximumLength(500)
             .When(z => string.IsNullOrWhiteSpace(z.Sobre) is false)
             .WithMessage("Dados do Autor inválidos");
 
         RuleFor(x => x.Biografia)
             .MaximumLength(1000)
-            .When(z => string.IsNullOrWhiteSpace(z.Sobre) is false)
-            .WithMessage("Dados do Autor inválidos");
+            .When(z => string.IsNullOrWhiteSpace(z.Biografia) is false)
+            .WithMessage("Biografia do Autor inválida");
     }
 }

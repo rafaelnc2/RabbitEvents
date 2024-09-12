@@ -1,5 +1,5 @@
 ﻿using RabbitEvents.Application.Interfaces;
-using RabbitEvents.Shared.Constants;
+using RabbitEvents.Shared.Configurations;
 
 namespace RabbitEvents.ImagesConsumers.Consumers;
 

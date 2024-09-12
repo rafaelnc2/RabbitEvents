@@ -1,21 +1,23 @@
-﻿namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
+﻿using RabbitEvents.Infrastructure.Shared;
 
-internal class AuthorRedisDecoratedRepository : IAutorRedisRepository
+namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
+
+internal class AuthorRedisDecoratedRepository : IAuthorRedisRepository
 {
     private readonly AuthorRedisRepository _autorRedisRepository;
-    private readonly IBus _bus;
+    private readonly EventSender _eventSender;
 
-    public AuthorRedisDecoratedRepository(AuthorRedisRepository autorRedisRepository, IBus bus)
+    public AuthorRedisDecoratedRepository(AuthorRedisRepository autorRedisRepository, EventSender eventSender)
     {
         _autorRedisRepository = autorRedisRepository;
-        _bus = bus;
+        _eventSender = eventSender;
     }
 
     public async Task<Author> CriarAsync(Author autor)
     {
         await _autorRedisRepository.CriarAsync(autor);
 
-        await PublishEventsAsync(autor);
+        await _eventSender.PublishEventsAsync(autor);
 
         return autor;
     }
@@ -24,7 +26,7 @@ internal class AuthorRedisDecoratedRepository : IAutorRedisRepository
     {
         await _autorRedisRepository.AtualizarAsync(autor);
 
-        await PublishEventsAsync(autor);
+        await _eventSender.PublishEventsAsync(autor);
 
         return autor;
     }
@@ -35,17 +37,4 @@ internal class AuthorRedisDecoratedRepository : IAutorRedisRepository
     public Task<IEnumerable<Author>> ObterTodosAsync(string? nameFilter) =>
         _autorRedisRepository.ObterTodosAsync(nameFilter);
 
-
-    private async ValueTask PublishEventsAsync(Entity entity)
-    {
-        if (entity.DomainEvents.Any() is false)
-            return;
-
-        foreach (IDomainEvent @event in entity.DomainEvents)
-        {
-            await _bus.Publish((object)@event);
-        }
-
-        entity.ClearEvents();
-    }
 }
