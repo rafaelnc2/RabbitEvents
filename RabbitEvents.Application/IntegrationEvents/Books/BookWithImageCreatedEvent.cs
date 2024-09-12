@@ -1,17 +1,11 @@
-﻿using RabbitEvents.Application.Interfaces.Events;
+﻿namespace RabbitEvents.Application.IntegrationEvents.Books;
 
-namespace RabbitEvents.Application.IntegrationEvents.Books;
-
-public sealed class BookWithImageCreatedEvent : IIntegrationEvent
+public sealed class BookWithImageCreatedEvent : WithImageEventBase
 {
     public Guid BookId { get; private set; }
-    public string FileExtension { get; private set; }
-    public string ContentType { get; private set; }
 
-    public BookWithImageCreatedEvent(Guid bookId, string fileExtension, string contentType)
+    public BookWithImageCreatedEvent(Guid bookId, string fileExtension, string contentType) : base(fileExtension, contentType)
     {
         BookId = bookId;
-        FileExtension = fileExtension;
-        ContentType = contentType;
     }
 }
