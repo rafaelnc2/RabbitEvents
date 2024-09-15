@@ -9,5 +9,6 @@ public static class ConsumersExtensions
         services.AddHostedService<ImageUploadConsumer>();
         services.AddHostedService<AuthorImageUpdateConsumer>();
         services.AddHostedService<ImageCreateConsumer>();
+        services.AddHostedService<BookImageUpdateConsumer>();
     }
 }

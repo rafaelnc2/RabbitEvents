@@ -22,18 +22,21 @@ public class BookRedisRepository : IBookRedisRepository
         return book;
     }
 
-    public Task<Book> AtualizarAsync(Book book)
+    public async Task<Book> AtualizarAsync(Book book)
     {
-        throw new NotImplementedException();
+        await _bookCollection.UpdateAsync(book);
+
+        return book;
     }
 
-    public Task<Book?> ObterPorIdAsync(string bookId)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<Book?> ObterPorIdAsync(string bookId) =>
+        _bookCollection.FindByIdAsync(bookId);
 
-    public Task<IEnumerable<Book>> ObterTodosAsync(string? filterName)
+    public async Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(filterTitle) is true)
+            return await _bookCollection.ToListAsync();
+
+        return await _bookCollection.Where(book => book.Titulo.Contains(filterTitle)).ToListAsync();
     }
 }

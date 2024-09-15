@@ -1,8 +1,4 @@
-﻿using RabbitEvents.Application.Interfaces;
-using RabbitEvents.ImagesConsumers.Helpers;
-using RabbitEvents.Shared.Configurations;
-using RabbitEvents.Shared.Constants;
-using RabbitEvents.Shared.Models.Messaging;
+﻿using RabbitEvents.Shared.Models.Messaging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Processing;
@@ -42,44 +38,50 @@ public sealed class ImageUploadConsumer : BackgroundService
     {
         _logger.LogInformation($"Processando a mensagem: {message}");
 
-        var messageBody = JsonSerializer.Deserialize<ImageMessageBodyDto>(message);
+        var queuesMessageDto = JsonSerializer.Deserialize<ImageMessageBodyDto>(message);
 
-        if (messageBody is null)
+        if (queuesMessageDto is null)
         {
             _logger.LogError($"Problemas para deserializar a mensagem {message}");
 
             throw new Exception($"Problemas para deserializar a mensagem {message}");
         }
 
-        if (string.IsNullOrWhiteSpace(messageBody.ImageId) || string.IsNullOrWhiteSpace(messageBody.FileExtension) || string.IsNullOrWhiteSpace(messageBody.ContentType))
+        if (string.IsNullOrWhiteSpace(queuesMessageDto.ImageId) || string.IsNullOrWhiteSpace(queuesMessageDto.FileExtension) || string.IsNullOrWhiteSpace(queuesMessageDto.ContentType))
         {
             _logger.LogError($"Erro ao obter dados da imagem. Mensagem: {message}");
 
             throw new Exception($"Erro ao obter dados da imagem. Mensagem: {message}");
         }
 
-        var cachedAutorImage = await _cacheService.GetBytesValueAsync(messageBody.ImageId);
+        var cachedImage = await _cacheService.GetBytesValueAsync(queuesMessageDto.ImageId);
 
-        if (cachedAutorImage is null)
+        if (cachedImage is null)
         {
-            _logger.LogWarning($"A imagem {messageBody.ImageId} não existe no cache");
+            _logger.LogWarning($"A imagem {queuesMessageDto.ImageId} não existe no cache");
 
-            throw new Exception($"A imagem {messageBody.ImageId} não existe no cache");
+            throw new Exception($"A imagem {queuesMessageDto.ImageId} não existe no cache");
         }
 
-        string fileNameMessage = $"{messageBody.ImageId}.{messageBody.FileExtension}";
+        string fileNameMessage = $"{queuesMessageDto.ImageId}.{queuesMessageDto.FileExtension}";
 
         string fileName = ProcessFileName.GetTextAfterSeparator(fileNameMessage, CacheKeysConstants.KEY_SEPARATOR);
 
-        using Stream stream = new MemoryStream(cachedAutorImage);
+        using Stream stream = new MemoryStream(cachedImage);
 
         using Stream resizedImageStream = await ResizeImageAsync(stream, fileName);
 
-        var uploadedFile = await _blobService.UploadFileAsync(BlobStorageConstants.AuthoImageContainerName, resizedImageStream, fileName, messageBody.ContentType, CancellationToken.None);
+        var uploadedFile = await _blobService.UploadFileAsync(
+            queuesMessageDto.BlobContainerName,
+            resizedImageStream,
+            fileName,
+            queuesMessageDto.ContentType,
+            CancellationToken.None
+        );
 
-        SendImageUpdateToQueue(message);
+        SendImageUpdateToQueue(queuesMessageDto, message);
 
-        await _cacheService.DeleteValueAsync(messageBody.ImageId);
+        await _cacheService.DeleteValueAsync(queuesMessageDto.ImageId);
     }
 
     private async Task<Stream> ResizeImageAsync(Stream imageStream, string fileName)
@@ -97,13 +99,13 @@ public sealed class ImageUploadConsumer : BackgroundService
         return newImageStream;
     }
 
-    private void SendImageUpdateToQueue(string messageBody)
+    private void SendImageUpdateToQueue(ImageMessageBodyDto queuesMessageDto, string messageToSend)
     {
         _queueService.SendMessage(new QueueMessage(
-            Queue: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE,
-            Exchange: QueueDefinitions.AUTHORS_EXCHANGE,
-            RoutingKey: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE.RoutingKey,
-            MessageBody: messageBody
+            Queue: queuesMessageDto.DestinationQueue,
+            Exchange: queuesMessageDto.DestinationExchange,
+            RoutingKey: queuesMessageDto.DestinationQueue.RoutingKey,
+            MessageBody: messageToSend
         ));
     }
 }

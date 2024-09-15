@@ -22,7 +22,10 @@ public sealed class BookWithImageCreatedEventHandler(
             var messageBody = new ImageMessageBodyDto(
                 ImageId: bookIdCacheKey,
                 FileExtension: context.Message.FileExtension,
-                ContentType: context.Message.ContentType
+                ContentType: context.Message.ContentType,
+                BlobContainerName: BlobStorageConstants.BooksImageContainerName,
+                DestinationQueue: QueueDefinitions.BOOKS_IMAGE_UPDATE_QUEUE,
+                DestinationExchange: QueueDefinitions.BOOKS_EXCHANGE
             );
 
             QueueService.SendMessage(new QueueMessage(

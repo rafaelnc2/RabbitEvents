@@ -22,18 +22,18 @@ internal class BookRedisDecoratedRepository : IBookRedisRepository
         return book;
     }
 
-    public Task<Book> AtualizarAsync(Book book)
+    public async Task<Book> AtualizarAsync(Book book)
     {
-        throw new NotImplementedException();
+        await _bookRedisRepository.AtualizarAsync(book);
+
+        await _eventSender.PublishEventsAsync(book);
+
+        return book;
     }
 
-    public Task<Book?> ObterPorIdAsync(string bookId)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<Book?> ObterPorIdAsync(string bookId) =>
+        _bookRedisRepository.ObterPorIdAsync(bookId);
 
-    public Task<IEnumerable<Book>> ObterTodosAsync(string? filterName)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle) =>
+        _bookRedisRepository.ObterTodosAsync(filterTitle);
 }

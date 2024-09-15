@@ -2,5 +2,6 @@
 
 public static class BlobStorageConstants
 {
-    public static string AuthoImageContainerName = "author-images";
+    public static string AuthorsImageContainerName = "authors-images";
+    public static string BooksImageContainerName = "books-images";
 }
