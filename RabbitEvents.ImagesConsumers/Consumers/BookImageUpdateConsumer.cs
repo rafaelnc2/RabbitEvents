@@ -1,18 +1,14 @@
 ﻿namespace RabbitEvents.ImagesConsumers.Consumers;
 
-/*
-    Consumidor da fila que atualiza o nome da imagem do autor após upload do arquivo
- */
-
-public sealed class AuthorImageUpdateConsumer : BackgroundService
+public sealed class BookImageUpdateConsumer : BackgroundService
 {
     private readonly ILogger<AuthorImageUpdateConsumer> _logger;
     private readonly IQueueService _queueService;
     private readonly IServiceProvider _serviceProvider;
 
-    private IAuthorRedisRepository? _autorRedisRepository;
+    private IBookRedisRepository? _bookRedisRepository;
 
-    public AuthorImageUpdateConsumer(ILogger<AuthorImageUpdateConsumer> logger, IQueueService queueService, IServiceProvider serviceProvider)
+    public BookImageUpdateConsumer(ILogger<AuthorImageUpdateConsumer> logger, IQueueService queueService, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _queueService = queueService;
@@ -21,10 +17,10 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation($"####################### Iniciando {nameof(AuthorImageUpdateConsumer)} ##################################");
+        _logger.LogInformation($"####################### Iniciando {nameof(BookImageUpdateConsumer)} ##################################");
 
         var message = _queueService.ConsumeQueue(
-            queueName: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE.Name,
+            queueName: QueueDefinitions.BOOKS_IMAGE_UPDATE_QUEUE.Name,
             messageHandlerAsync: HandleMessageConsumerAsync,
             cancellationToken: stoppingToken
         );
@@ -61,11 +57,11 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
             throw new Exception($"ImageId inválido. Mensagem: {message}");
         }
 
-        GetAutorRepository();
+        GetBookRepository();
 
-        Author? author = await _autorRedisRepository!.ObterPorIdAsync(entityId);
+        Book? book = await _bookRedisRepository!.ObterPorIdAsync(entityId);
 
-        if (author is null)
+        if (book is null)
         {
             _logger.LogError($"Autor com Id {entityId} não foi encontrado. Mensagem: {message}");
 
@@ -74,16 +70,15 @@ public sealed class AuthorImageUpdateConsumer : BackgroundService
 
         string newFileName = $"{entityId}.{messageBody.FileExtension}";
 
-        author.UpdateImageName(newFileName);
+        book.UpdateImageName(newFileName);
 
-        await _autorRedisRepository.AtualizarAsync(author);
+        await _bookRedisRepository.AtualizarAsync(book);
     }
 
-    private void GetAutorRepository()
+    private void GetBookRepository()
     {
         using var scope = _serviceProvider.CreateScope();
 
-        _autorRedisRepository = scope.ServiceProvider.GetRequiredService<IAuthorRedisRepository>();
+        _bookRedisRepository = scope.ServiceProvider.GetRequiredService<IBookRedisRepository>();
     }
-
 }

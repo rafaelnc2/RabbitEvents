@@ -1,3 +1,12 @@
-﻿namespace RabbitEvents.Shared.Dtos;
+﻿using RabbitEvents.Shared.Models.Messaging;
 
-public record ImageMessageBodyDto(string ImageId, string FileExtension, string ContentType);
+namespace RabbitEvents.Shared.Dtos;
+
+public record ImageMessageBodyDto(
+    string ImageId,
+    string FileExtension,
+    string ContentType,
+    string BlobContainerName,
+    Queue DestinationQueue,
+    Exchange? DestinationExchange
+);

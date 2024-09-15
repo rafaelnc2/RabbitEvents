@@ -22,7 +22,10 @@ public sealed class AuthorWithImageCreatedEventHandler(
             var messageBody = new ImageMessageBodyDto(
                 ImageId: authorIdCacheKey,
                 FileExtension: context.Message.FileExtension,
-                ContentType: context.Message.ContentType
+                ContentType: context.Message.ContentType,
+                BlobContainerName: BlobStorageConstants.AuthorsImageContainerName,
+                DestinationQueue: QueueDefinitions.AUTHORS_IMAGE_UPDATE_QUEUE,
+                DestinationExchange: QueueDefinitions.AUTHORS_EXCHANGE
             );
 
             QueueService.SendMessage(new QueueMessage(
