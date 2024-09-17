@@ -21,7 +21,7 @@ public sealed class Author : Entity
         DataAtualizacao = dataAtualizacao;
     }
 
-    [Searchable]
+    [Searchable(PhoneticMatcher = "dm:pt")]
     public string Nome { get; private set; }
 
     [Searchable]
