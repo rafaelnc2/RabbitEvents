@@ -4,12 +4,12 @@ namespace RabbitEvents.Application.Mappings;
 
 public static class BookMap
 {
-    public static CreateBookResponse ToCreateBookRespponse(Book book) =>
-        new CreateBookResponse(
+    public static BookResponse ToCreateBookRespponse(Book book) =>
+        new BookResponse(
             book.Id,
             book.Titulo,
             book.Prefacio,
-            book.Author.Nome,
+            book.AuthorInfo.Nome,
             book.Edicao,
             book.AnoPublicacao,
             book.Editora,

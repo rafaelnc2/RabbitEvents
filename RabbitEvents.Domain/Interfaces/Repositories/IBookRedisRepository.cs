@@ -8,5 +8,5 @@ public interface IBookRedisRepository
 
     Task<Book?> ObterPorIdAsync(string bookId);
 
-    Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle);
+    Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle = null);
 }

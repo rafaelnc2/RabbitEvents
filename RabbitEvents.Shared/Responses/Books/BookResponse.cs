@@ -1,6 +1,6 @@
 ﻿namespace RabbitEvents.Shared.Responses.Books;
 
-public record CreateBookResponse(
+public record BookResponse(
     Guid Id,
     string Titulo,
     string Prefacio,

@@ -1,3 +1,3 @@
 ﻿namespace RabbitEvents.Shared.Inputs.Authors;
 
-public record GetBookByIdInput(string Id);
+public record GetAuthorByIdInput(string Id);

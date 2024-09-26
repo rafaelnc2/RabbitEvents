@@ -1,4 +1,6 @@
-﻿using RabbitEvents.Application.Validators.Books;
+﻿using RabbitEvents.Application.Validators.Autor;
+using RabbitEvents.Application.Validators.Books;
+using RabbitEvents.Shared.Inputs.Authors;
 using RabbitEvents.Shared.Inputs.Books;
 using RabbitEvents.Shared.Responses.Books;
 
@@ -21,6 +23,32 @@ public class BookController : ApiBaseController
     {
         var response = await _bookService.CriarAsync(createBookInput);
 
-        return ApiResult<CreateBookResponse>(response);
+        return ApiResult<BookResponse>(response);
+    }
+
+    [HttpPut("{id}")]
+    [TypeFilter(typeof(ValidatorFilter<UpdateBookInput, UpdateBookValidator>))]
+    public async Task<IActionResult> AtualizarAsync([FromRoute] string id, [FromForm] UpdateBookInput atualizarLivroInput)
+    {
+        var response = await _bookService.AtualizarAsync(atualizarLivroInput);
+
+        return ApiResult<BookResponse>(response);
+    }
+
+    [HttpGet("{Id}")]
+    [TypeFilter(typeof(ValidatorFilter<GetBookByIdInput, GetBookByIdValidator>))]
+    public async Task<IActionResult> ObterPorIdAsync([FromRoute] GetBookByIdInput obterLivroPorIdInput)
+    {
+        var response = await _bookService.ObterPorIdAsync(obterLivroPorIdInput);
+
+        return ApiResult<BookResponse>(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ObterTodosAsync([FromQuery] string? titulo)
+    {
+        var response = await _bookService.ObterTodosAsync(titulo);
+
+        return ApiResult<IEnumerable<BookResponse>>(response);
     }
 }
