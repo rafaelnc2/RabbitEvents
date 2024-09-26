@@ -34,6 +34,6 @@ internal class BookRedisDecoratedRepository : IBookRedisRepository
     public Task<Book?> ObterPorIdAsync(string bookId) =>
         _bookRedisRepository.ObterPorIdAsync(bookId);
 
-    public Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle) =>
-        _bookRedisRepository.ObterTodosAsync(filterTitle);
+    public Task<IEnumerable<Book>> ObterTodosAsync(string? titleFilter) =>
+        _bookRedisRepository.ObterTodosAsync(titleFilter);
 }

@@ -32,11 +32,11 @@ public class BookRedisRepository : IBookRedisRepository
     public Task<Book?> ObterPorIdAsync(string bookId) =>
         _bookCollection.FindByIdAsync(bookId);
 
-    public async Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle)
+    public async Task<IEnumerable<Book>> ObterTodosAsync(string? titleFilter)
     {
-        if (string.IsNullOrWhiteSpace(filterTitle) is true)
+        if (string.IsNullOrWhiteSpace(titleFilter) is true)
             return await _bookCollection.ToListAsync();
 
-        return await _bookCollection.Where(book => book.Titulo.Contains(filterTitle)).ToListAsync();
+        return await _bookCollection.Where(book => book.Titulo.Contains(titleFilter)).ToListAsync();
     }
 }

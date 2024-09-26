@@ -1,4 +1,5 @@
 ﻿using RabbitEvents.Domain.DomainEvents.BookEvents;
+using RabbitEvents.Domain.ValueObjects;
 using Redis.OM.Modeling;
 using System.Text.Json.Serialization;
 
@@ -8,11 +9,10 @@ namespace RabbitEvents.Domain.Entities;
 public sealed class Book : Entity
 {
     [JsonConstructor]
-    private Book(Guid id, Guid authorId, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco,
-        DateTime dataCriacao, DateTime? dataAtualizacao)
+    private Book(Guid id, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco,
+        AuthorInfoVo authorInfo, DateTime dataCriacao, DateTime? dataAtualizacao)
     {
         Id = id;
-        AuthorId = authorId;
         Titulo = titulo;
         Prefacio = prefacio;
         Edicao = edicao;
@@ -21,22 +21,19 @@ public sealed class Book : Entity
         GeneroLiterario = generoLiterario;
         Preco = preco;
 
+        AuthorInfo = authorInfo;
+
         DataCriacao = dataCriacao;
         DataAtualizacao = dataAtualizacao;
     }
 
-    public Guid AuthorId { get; private set; }
-
-    [Searchable]
+    [Indexed(Sortable = true)]
     public string Titulo { get; private set; }
 
-    [Searchable]
     public string Prefacio { get; private set; }
 
-    [Searchable]
     public string Edicao { get; private set; }
 
-    [Searchable]
     public int AnoPublicacao { get; set; }
 
     [Searchable]
@@ -45,20 +42,22 @@ public sealed class Book : Entity
     [Indexed]
     public string GeneroLiterario { get; private set; }
 
-    [Searchable]
+    [Indexed(Sortable = true)]
     public double Preco { get; private set; }
 
     public string? Imagem { get; private set; }
 
+    //[Indexed(JsonPath = "$.Id")]
+    [Indexed(CascadeDepth = 1)]
+    public AuthorInfoVo AuthorInfo { get; private set; }
 
-    [JsonIgnore]
-    public Author Author { get; private set; }
 
-    public static Book Create(Author author, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco)
+    public static Book Create(Guid AuthorId, string AuthorName, string titulo, string prefacio, string edicao, int anoPublicacao, string editora,
+        string generoLiterario, double preco)
     {
         var livro = new Book(
             id: Guid.NewGuid(),
-            authorId: author.Id,
+            authorInfo: new AuthorInfoVo(AuthorId, AuthorName),
             titulo: titulo,
             prefacio: prefacio,
             edicao: edicao,
@@ -70,16 +69,13 @@ public sealed class Book : Entity
             dataAtualizacao: null
         );
 
-        livro.Author = author;
-
         Raise(new BookCreatedEvent(livro.Id));
 
         return livro;
     }
 
-    public void Update(Guid authorId, string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco)
+    public void Update(string titulo, string prefacio, string edicao, int anoPublicacao, string editora, string generoLiterario, double preco)
     {
-        AuthorId = authorId;
         Titulo = titulo;
         Prefacio = prefacio;
         Edicao = edicao;
