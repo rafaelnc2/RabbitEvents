@@ -10,5 +10,5 @@ public interface IBookDomainService
     Task<ApiResponse<BookResponse>> AtualizarAsync(UpdateBookInput atualizarInput);
 
     Task<ApiResponse<BookResponse>> ObterPorIdAsync(GetBookByIdInput obterLivroPorIdInput);
-    Task<ApiResponse<IEnumerable<BookResponse>>> ObterTodosAsync(string? titleFilter);
+    Task<ApiResponse<IEnumerable<BookResponse>>> ObterTodosAsync(GetBooksByFiltersInput? filtersInput);
 }

@@ -4,14 +4,14 @@ namespace RabbitEvents.Domain.ValueObjects;
 
 public class AuthorInfoVo
 {
-    public AuthorInfoVo(Guid id, string nome)
+    public AuthorInfoVo(string id, string nome)
     {
         Id = id;
         Nome = nome;
     }
 
     [Indexed]
-    public Guid Id { get; init; }
+    public string Id { get; init; }
 
     [Searchable]
     public string Nome { get; init; } = null!;

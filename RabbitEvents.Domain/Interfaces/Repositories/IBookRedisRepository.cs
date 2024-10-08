@@ -1,4 +1,6 @@
-﻿namespace RabbitEvents.Domain.Interfaces.Repositories;
+﻿using RabbitEvents.Shared.Inputs.Books;
+
+namespace RabbitEvents.Domain.Interfaces.Repositories;
 
 public interface IBookRedisRepository
 {
@@ -8,5 +10,5 @@ public interface IBookRedisRepository
 
     Task<Book?> ObterPorIdAsync(string bookId);
 
-    Task<IEnumerable<Book>> ObterTodosAsync(string? filterTitle = null);
+    IEnumerable<Book> ObterTodos(GetBooksByFiltersInput filtersInput);
 }

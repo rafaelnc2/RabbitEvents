@@ -45,9 +45,9 @@ public class BookController : ApiBaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> ObterTodosAsync([FromQuery] string? titulo)
+    public async Task<IActionResult> ObterTodosAsync([FromQuery] GetBooksByFiltersInput? filtersInput)
     {
-        var response = await _bookService.ObterTodosAsync(titulo);
+        var response = await _bookService.ObterTodosAsync(filtersInput);
 
         return ApiResult<IEnumerable<BookResponse>>(response);
     }
