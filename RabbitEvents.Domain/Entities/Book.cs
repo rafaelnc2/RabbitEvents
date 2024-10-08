@@ -69,7 +69,7 @@ public sealed class Book : Entity
             dataAtualizacao: null
         );
 
-        Raise(new BookCreatedEvent(livro.Id));
+        Raise(new BookCreatedEvent(livro.Id, livro.GeneroLiterario));
 
         return livro;
     }
@@ -84,6 +84,8 @@ public sealed class Book : Entity
         GeneroLiterario = generoLiterario;
         Preco = preco;
         DataAtualizacao = DateTime.Now;
+
+
     }
 
     public void UpdateImageName(string imageName)

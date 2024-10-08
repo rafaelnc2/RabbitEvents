@@ -19,13 +19,18 @@ public sealed class BookCreatedEventHandler : IConsumer<BookCreatedEvent>
     {
         _logger.LogInformation("Event handler LivroCriado");
 
-        var bookId = context.Message.Id;
-
         _queueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.BOOKS_QUEUE,
             Exchange: null,
-            RoutingKey: "books",
-            MessageBody: bookId.ToString()
+            RoutingKey: QueueDefinitions.BOOKS_QUEUE.RoutingKey,
+            MessageBody: context.Message.Id.ToString()
+        ));
+
+        _queueService.SendMessage(new QueueMessage(
+            Queue: QueueDefinitions.LITERARY_GENRE_QUEUE,
+            Exchange: null,
+            RoutingKey: QueueDefinitions.LITERARY_GENRE_QUEUE.RoutingKey,
+            MessageBody: context.Message.GeneroLiterario
         ));
     }
 }
