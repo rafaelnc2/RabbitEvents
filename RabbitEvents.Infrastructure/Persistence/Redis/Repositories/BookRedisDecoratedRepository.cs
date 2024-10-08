@@ -1,4 +1,5 @@
 ﻿using RabbitEvents.Infrastructure.Shared;
+using RabbitEvents.Shared.Inputs.Books;
 
 namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
 
@@ -34,6 +35,6 @@ internal class BookRedisDecoratedRepository : IBookRedisRepository
     public Task<Book?> ObterPorIdAsync(string bookId) =>
         _bookRedisRepository.ObterPorIdAsync(bookId);
 
-    public Task<IEnumerable<Book>> ObterTodosAsync(string? titleFilter) =>
-        _bookRedisRepository.ObterTodosAsync(titleFilter);
+    public IEnumerable<Book> ObterTodos(GetBooksByFiltersInput filtersInput) =>
+        _bookRedisRepository.ObterTodos(filtersInput);
 }

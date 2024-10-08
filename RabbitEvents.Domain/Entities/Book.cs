@@ -52,7 +52,7 @@ public sealed class Book : Entity
     public AuthorInfoVo AuthorInfo { get; private set; }
 
 
-    public static Book Create(Guid AuthorId, string AuthorName, string titulo, string prefacio, string edicao, int anoPublicacao, string editora,
+    public static Book Create(string AuthorId, string AuthorName, string titulo, string prefacio, string edicao, int anoPublicacao, string editora,
         string generoLiterario, double preco)
     {
         var livro = new Book(

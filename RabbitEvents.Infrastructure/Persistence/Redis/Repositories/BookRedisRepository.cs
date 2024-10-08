@@ -1,4 +1,6 @@
-﻿namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
+﻿using RabbitEvents.Shared.Inputs.Books;
+
+namespace RabbitEvents.Infrastructure.Persistence.Redis.Repositories;
 
 public class BookRedisRepository : IBookRedisRepository
 {
@@ -32,11 +34,25 @@ public class BookRedisRepository : IBookRedisRepository
     public Task<Book?> ObterPorIdAsync(string bookId) =>
         _bookCollection.FindByIdAsync(bookId);
 
-    public async Task<IEnumerable<Book>> ObterTodosAsync(string? titleFilter)
+    public IEnumerable<Book> ObterTodos(GetBooksByFiltersInput filtersInput)
     {
-        if (string.IsNullOrWhiteSpace(titleFilter) is true)
-            return await _bookCollection.ToListAsync();
+        var query = _bookCollection.AsQueryable();
 
-        return await _bookCollection.Where(book => book.Titulo.Contains(titleFilter)).ToListAsync();
+        if (string.IsNullOrWhiteSpace(filtersInput.Titulo) is false)
+            query = query.Where(b => b.Titulo.StartsWith(filtersInput.Titulo));
+
+        if (string.IsNullOrWhiteSpace(filtersInput.Editora) is false)
+            query = query.Where(b => b.Editora.StartsWith(filtersInput.Editora));
+
+        if (string.IsNullOrWhiteSpace(filtersInput.GeneroLiterario) is false)
+            query = query.Where(b => b.GeneroLiterario.Contains(filtersInput.GeneroLiterario));
+
+        if (string.IsNullOrWhiteSpace(filtersInput.IdAutor) is false)
+            query = query.Where(b => b.AuthorInfo.Id == filtersInput.IdAutor);
+
+        if (string.IsNullOrWhiteSpace(filtersInput.NomeAutor) is false)
+            query = query.Where(b => b.AuthorInfo.Nome.StartsWith(filtersInput.NomeAutor));
+
+        return query.ToList();
     }
 }

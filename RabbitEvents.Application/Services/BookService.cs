@@ -31,7 +31,7 @@ public sealed class BookService : IBookDomainService
         if (author is not Author)
             return response.BadRequestResponse(new List<string>() { "Autor informado é inválido" });
 
-        var book = Book.Create(author.Id, author.Nome, criarInput.Titulo, criarInput.Prefacio, criarInput.Edicao, criarInput.AnoPublicacao,
+        var book = Book.Create(author.Id.ToString(), author.Nome, criarInput.Titulo, criarInput.Prefacio, criarInput.Edicao, criarInput.AnoPublicacao,
             criarInput.Editora, criarInput.GeneroLiterario, criarInput.Preco);
 
         var result = await _bookRedisRepository.CriarAsync(book);
@@ -105,13 +105,13 @@ public sealed class BookService : IBookDomainService
         return response.OkResponse(bookResponse);
     }
 
-    public async Task<ApiResponse<IEnumerable<BookResponse>>> ObterTodosAsync(string? titleFilter)
+    public async Task<ApiResponse<IEnumerable<BookResponse>>> ObterTodosAsync(GetBooksByFiltersInput? filtersInput)
     {
         _logger.LogInformation("Obter todos os Livros");
 
         var response = new ApiResponse<IEnumerable<BookResponse>>();
 
-        var books = await _bookRedisRepository.ObterTodosAsync(titleFilter);
+        var books = _bookRedisRepository.ObterTodos(filtersInput);
 
         var result = books.Select(book => BookMap.ToCreateBookRespponse(book));
 
