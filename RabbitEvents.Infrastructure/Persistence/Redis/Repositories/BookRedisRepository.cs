@@ -45,7 +45,7 @@ public class BookRedisRepository : IBookRedisRepository
             query = query.Where(b => b.Editora.StartsWith(filtersInput.Editora));
 
         if (string.IsNullOrWhiteSpace(filtersInput.GeneroLiterario) is false)
-            query = query.Where(b => b.GeneroLiterario.Contains(filtersInput.GeneroLiterario));
+            query = query.Where(b => b.GeneroLiterario == filtersInput.GeneroLiterario);
 
         if (string.IsNullOrWhiteSpace(filtersInput.IdAutor) is false)
             query = query.Where(b => b.AuthorInfo.Id == filtersInput.IdAutor);
