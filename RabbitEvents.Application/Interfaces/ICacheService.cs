@@ -8,4 +8,6 @@ public interface ICacheService
     Task<byte[]?> GetBytesValueAsync(string key);
     Task DeleteValueAsync(string key);
     Task<bool> KeyExistsAsync(string key);
+
+    Task<IEnumerable<string>> GetSetMembersAsync(string key);
 }

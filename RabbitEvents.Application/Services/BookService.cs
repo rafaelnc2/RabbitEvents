@@ -11,13 +11,15 @@ public sealed class BookService : IBookDomainService
     private readonly IAuthorRedisRepository _autorRedisRepository;
     private readonly IBookRedisRepository _bookRedisRepository;
     private readonly ImageService _imageService;
+    private readonly ICacheService _cacheService;
 
-    public BookService(ILogger<BookService> logger, IAuthorRedisRepository autorRedisRepository, IBookRedisRepository bookRedisRepository, ImageService imageService)
+    public BookService(ILogger<BookService> logger, IAuthorRedisRepository autorRedisRepository, IBookRedisRepository bookRedisRepository, ImageService imageService, ICacheService cacheService)
     {
         _logger = logger;
         _autorRedisRepository = autorRedisRepository;
         _bookRedisRepository = bookRedisRepository;
         _imageService = imageService;
+        _cacheService = cacheService;
     }
 
     public async Task<ApiResponse<BookResponse>> CriarAsync(CreateBookInput criarInput)
@@ -114,6 +116,17 @@ public sealed class BookService : IBookDomainService
         var books = _bookRedisRepository.ObterTodos(filtersInput);
 
         var result = books.Select(book => BookMap.ToCreateBookRespponse(book));
+
+        return response.OkResponse(result);
+    }
+
+    public async Task<ApiResponse<IEnumerable<string>>> ObterGenerosLiterariosAsync()
+    {
+        _logger.LogInformation("Obter todos os Gêneros Literários");
+
+        var response = new ApiResponse<IEnumerable<string>>();
+
+        var result = await _cacheService.GetSetMembersAsync(CacheKeysConstants.LITERARY_GENRE_LIST_NAME);
 
         return response.OkResponse(result);
     }

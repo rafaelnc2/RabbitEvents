@@ -51,4 +51,13 @@ public class BookController : ApiBaseController
 
         return ApiResult<IEnumerable<BookResponse>>(response);
     }
+
+
+    [HttpGet("generos-literarios")]
+    public async Task<IActionResult> ObterGenerosLitarariosAsync()
+    {
+        var response = await _bookService.ObterGenerosLiterariosAsync();
+
+        return ApiResult<IEnumerable<string>>(response);
+    }
 }
