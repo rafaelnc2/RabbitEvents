@@ -50,4 +50,20 @@ public sealed class CacheService : ICacheService
 
     public Task<bool> KeyExistsAsync(string key) =>
         _database.KeyExistsAsync(key);
+
+
+    public async Task<IEnumerable<string>> GetSetMembersAsync(string key)
+    {
+        if (_database.KeyExists(key) is false)
+            return Enumerable.Empty<string>();
+
+        var list = new List<string>();
+
+        var members = await _database.SetMembersAsync(key);
+
+        foreach (var member in members)
+            list.Add(member.ToString());
+
+        return list;
+    }
 }

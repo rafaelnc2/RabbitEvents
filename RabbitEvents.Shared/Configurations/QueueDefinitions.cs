@@ -22,4 +22,6 @@ public static partial class QueueDefinitions
     public static Queue IMAGES_UPLOAD_QUEUE = new("images_upload", "images.upload", DeadLetterImageQueueArguments);
 
     public static Queue IMAGES_CREATE_QUEUE = new("images_create", "images.create", DeadLetterImageQueueArguments);
+
+    public static Queue LITERARY_GENRE_QUEUE = new("literary_genres", "literary_genres");
 }

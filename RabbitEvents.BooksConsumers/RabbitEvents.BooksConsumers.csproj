@@ -4,21 +4,22 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-RabbitEvents.ImagesConsumers-ca3f2acb-96e1-4972-bd0d-a0bd0992f239</UserSecretsId>
+    <UserSecretsId>dotnet-RabbitEvents.BooksConsumers-de779d7c-2045-46f4-970f-c1a8f99dfd19</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Cloud.AIPlatform.V1" Version="3.6.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RabbitEvents.Domain\RabbitEvents.Domain.csproj" />
     <ProjectReference Include="..\RabbitEvents.Infrastructure\RabbitEvents.Infrastructure.csproj" />
     <ProjectReference Include="..\RabbitEvents.Shared\RabbitEvents.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>
