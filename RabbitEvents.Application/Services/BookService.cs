@@ -128,6 +128,6 @@ public sealed class BookService : IBookDomainService
 
         var result = await _cacheService.GetSetMembersAsync(CacheKeysConstants.LITERARY_GENRE_LIST_NAME);
 
-        return response.OkResponse(result);
+        return response.OkResponse(result.Order());
     }
 }
