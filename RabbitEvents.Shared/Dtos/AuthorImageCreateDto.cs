@@ -1,3 +1,3 @@
 ﻿namespace RabbitEvents.Shared.Dtos;
 
-public record AuthorImageCreateDto(Guid AuthorId, string AuthorName);
+public record AuthorImageCreateDto(Guid AuthorId, string AuthorName, string DescriptionForCreatingImage);

@@ -12,9 +12,12 @@ public sealed class AuthorWithoutImageCreatedEventHandler(
     {
         Logger.LogInformation("Event handler AuthorWithoutImageCreatedEventHandler");
 
+        var descriptionForCreatingImage = $"I want an image of {context.Message.AuthorName} as a cartoon, very smiling, reading a book and drinking a cup of coffee";
+
         var messageBody = new AuthorImageCreateDto(
             AuthorId: context.Message.AuthorId,
-            AuthorName: context.Message.AuthorName
+            AuthorName: context.Message.AuthorName,
+            DescriptionForCreatingImage: descriptionForCreatingImage
         );
 
         QueueService.SendMessage(new QueueMessage(

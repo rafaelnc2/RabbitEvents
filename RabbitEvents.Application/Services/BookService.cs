@@ -43,10 +43,10 @@ public sealed class BookService : IBookDomainService
             _logger.LogInformation("Criar livro com imagem");
 
             var bookWithImageCreatedEvent = new BookWithImageCreatedEvent(book.Id, criarInput.Imagem.GetFileExtension(), criarInput.Imagem.ContentType);
-            var bookWithoutImageCreatedEvent = new BookWithoutImageCreatedEvent(book.Id, book.Titulo);
+            var bookWithoutImageCreatedEvent = new BookWithoutImageCreatedEvent(book.Id, book.Titulo, book.GeneroLiterario);
 
             await _imageService.SaveImageService(criarInput.Imagem, CacheKeysConstants.BOOK_IMAGE_KEY, book.Id, book.Titulo,
-                bookWithImageCreatedEvent, bookWithoutImageCreatedEvent).ConfigureAwait(false); ;
+                bookWithImageCreatedEvent, bookWithoutImageCreatedEvent).ConfigureAwait(false);
         }
 
         var bookResponse = BookMap.ToCreateBookRespponse(book);
