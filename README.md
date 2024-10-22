@@ -1,6 +1,6 @@
 <h1>Rabbit Events</h1>
 
-<h3>Projeto simples com cadastro de Livros e Autores para testar a implementação de tecnologias e conceitos.</h3>
+<h3>Projeto simples, onde nada foi planejado, com cadastro de Livros e Autores para testar a implementação de tecnologias e conceitos.</h3>
 
 <ul>
     <li>
