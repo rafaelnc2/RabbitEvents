@@ -7,6 +7,9 @@
         Arquitetura limpa;
     </li>
     <li>
+        .NET Filters;
+    </li>
+    <li>
         Implementação de Eventos de domínio e eventos de integração utilizando Mass Transit;     
     </li>
     <li>
