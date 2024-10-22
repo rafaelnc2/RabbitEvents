@@ -19,6 +19,6 @@
         Utilização do Redis para banco de dados e cache distribuido;
     </li>
     <li>
-        Upload de imagens em um blobl storage.
+        Upload de imagens em um blob storage.
     </li>    
 </ul>
