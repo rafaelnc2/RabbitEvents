@@ -62,7 +62,9 @@ public sealed class AuthorService : IAuthorDomainService
         if (atualizarInput.Imagem is not null)
         {
             var authorWithImageUpdatedEvent = new AuthorWithImageCreatedEvent(author.Id, atualizarInput.Imagem.GetFileExtension(), atualizarInput.Imagem.ContentType);
-            await _imageService.SaveImageService(atualizarInput.Imagem, CacheKeysConstants.AUTHOR_IMAGE_KEY, author.Id, author.Nome, authorWithImageUpdatedEvent);
+
+            await _imageService.SaveImageService(atualizarInput.Imagem, CacheKeysConstants.AUTHOR_IMAGE_KEY, author.Id, author.Nome,
+                authorWithImageUpdatedEvent).ConfigureAwait(false);
         }
 
         var autorResponse = AuthorMap.ToAutorResponse(author);

@@ -1,7 +1,4 @@
-﻿using RabbitEvents.Application.Interfaces;
-using RabbitEvents.Shared.Configurations;
-
-namespace RabbitEvents.ImagesConsumers.Consumers;
+﻿namespace RabbitEvents.ImagesConsumers.Consumers;
 
 public sealed class ImageCreateConsumer : BackgroundService
 {
@@ -46,8 +43,6 @@ public sealed class ImageCreateConsumer : BackgroundService
         try
         {
             // Integrar com API para criação de imagem
-
-            //string templateToCreateImage = $"I want an image of {authorImageCreateDto.AuthorName} as a cartoon, very smiling, reading a book and drinking a cup of coffee";
 
             //_logger.LogInformation("############### Created Image #########################################");
         }

@@ -85,7 +85,7 @@ public sealed class Book : Entity
         Preco = preco;
         DataAtualizacao = DateTime.Now;
 
-
+        Raise(new BookUpdatedEvent(Id));
     }
 
     public void UpdateImageName(string imageName)

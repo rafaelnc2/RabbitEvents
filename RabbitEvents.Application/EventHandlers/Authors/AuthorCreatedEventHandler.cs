@@ -24,7 +24,7 @@ public sealed class AuthorCreatedEventHandler : IConsumer<AuthorCreatedEvent>
         _queueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.AUTHORS_QUEUE,
             Exchange: null,
-            RoutingKey: "authors",
+            RoutingKey: QueueDefinitions.AUTHORS_QUEUE.RoutingKey,
             MessageBody: autorId.ToString()
         ));
     }

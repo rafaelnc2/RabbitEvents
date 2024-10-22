@@ -18,7 +18,7 @@ public sealed class AuthorUpdatedEventHandler(
         QueueService.SendMessage(new QueueMessage(
             Queue: QueueDefinitions.AUTHORS_QUEUE,
             Exchange: null,
-            RoutingKey: "authors",
+            RoutingKey: QueueDefinitions.AUTHORS_QUEUE.RoutingKey,
             MessageBody: authorId.ToString()
         ));
 
