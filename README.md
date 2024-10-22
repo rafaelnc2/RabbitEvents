@@ -1,7 +1,21 @@
-Projeto simples com cadastro de Livros e Autores para testar a implementação de tecnologias e conceitos.
+<h1>Rabbit Events</h1>
 
-Arquitetura limpa;
-Implementação de Eventos de domínio e eventos de integração utilizando Mass Transit; 
-Publicação e consumo de filas utilizando RabbitMQ com workers separados;
-Utilização do Redis para banco de dados e cache distribuido;
-Upload de imagens em um blobl storage.
+<h3>Projeto simples com cadastro de Livros e Autores para testar a implementação de tecnologias e conceitos.</h3>
+
+<ul>
+    <li>
+        Arquitetura limpa;
+    </li>
+    <li>
+        Implementação de Eventos de domínio e eventos de integração utilizando Mass Transit;     
+    </li>
+    <li>
+        Publicação e consumo de filas utilizando RabbitMQ com workers separados;
+    </li>
+    <li>
+        Utilização do Redis para banco de dados e cache distribuido;
+    </li>
+    <li>
+        Upload de imagens em um blobl storage.
+    </li>    
+</ul>
